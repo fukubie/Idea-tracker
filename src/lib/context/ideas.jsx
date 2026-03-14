@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { useUser } from "./user";
 import { expandIdea } from "../services/gemini";
 import { emailService } from "../services/emailService";
+import { generatePitch } from "../services/gemini";
 
 export const IDEAS_DATABASE_ID = import.meta.env.VITE_APPWRITE_DATABASE_ID;
 export const IDEAS_COLLECTION_ID = import.meta.env.VITE_APPWRITE_COLLECTION_ID;
@@ -465,6 +466,17 @@ export function IdeasProvider({ children }) {
     return todayExpansions.length >= 3;
   };
 
+  const checkDailyPitchLimit = (ideasList, userId) => {
+    const today = new Date().toDateString();
+    const todayPitches = ideasList.filter(
+      (idea) =>
+        idea.userId === userId &&
+        idea.pitchGeneratedAt &&
+        new Date(idea.pitchGeneratedAt).toDateString() === today
+    );
+    return todayPitches.length >= 3;
+  };
+
   async function expandWithAI(idea) {
     if (!user) {
       toast.error("Please log in to expand ideas");
@@ -502,6 +514,44 @@ export function IdeasProvider({ children }) {
     } catch (err) {
       console.error("AI expansion error:", err);
       toast.error("Failed to expand idea. Please try again.");
+      throw err;
+    }
+  }
+
+  async function generatePitchWithAI(idea) {
+    if (!user) {
+      toast.error("Please log in to generate a pitch");
+      return;
+    }
+
+    if (checkDailyPitchLimit(ideas, user.$id)) {
+      toast.error("Daily limit reached! You can generate 3 pitches per day.");
+      return;
+    }
+
+    try {
+      const result = await generatePitch(
+        idea.title,
+        idea.description,
+        "investors",
+        "refine this idea into a clear pitch deck"
+      );
+
+      if (result.success) {
+        const pitchGeneratedAt = new Date().toISOString();
+
+        await update(idea.$id, {
+          aiPitch: result.pitch,
+          pitchGeneratedAt,
+        });
+
+        return result.pitch;
+      } else {
+        throw new Error(result.error);
+      }
+    } catch (err) {
+      console.error("AI pitch error:", err);
+      toast.error("Failed to generate pitch. Please try again.");
       throw err;
     }
   }
@@ -823,6 +873,7 @@ export function IdeasProvider({ children }) {
     remove,
     markAsComplete,
     expandWithAI,
+    generatePitchWithAI,
     toggleLike,
     fetchPublicIdeas,
     searchIdeas,

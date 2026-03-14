@@ -1,58 +1,40 @@
-import { functions } from "../appwrite";
+async function ensureAuthenticated() {
+  const { account } = await import("../appwrite");
+  try {
+    await account.get();
+  } catch (authError) {
+    console.error("User not authenticated:", authError);
+    throw new Error("Please log in to use AI features");
+  }
+}
 
-const AI_EXPANSION_FUNCTION_ID = import.meta.env.VITE_APPWRITE_FUNCTION_ID;
+async function postJson(url, payload) {
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(text || response.statusText);
+  }
+
+  return response.json();
+}
 
 export async function expandIdea(title, description, category, priority) {
   try {
-    const { account } = await import("../appwrite");
-    try {
-      const user = await account.get();
-    } catch (authError) {
-      console.error("User not authenticated:", authError);
-      throw new Error("Please log in to use AI expansion");
-    }
+    await ensureAuthenticated();
 
-    const response = await functions.createExecution(
-      AI_EXPANSION_FUNCTION_ID,
-      JSON.stringify({
-        title,
-        description,
-        category,
-        priority,
-      })
-    );
-
-    // Check if execution was successful
-    if (response.status !== "completed") {
-      console.error("Function execution failed:", response);
-      throw new Error(
-        `Function execution failed with status: ${response.status}`
-      );
-    }
-
-    // Check for function errors
-    if (response.errors && response.errors.trim()) {
-      console.error("Function errors:", response.errors);
-      throw new Error(`Function error: ${response.errors}`);
-    }
-
-    // Check if response.responseBody exists and is not empty
-    if (!response.responseBody || response.responseBody.trim() === "") {
-      throw new Error("Function returned empty response");
-    }
-
-    // Check if the response is the default Appwrite response
-    if (response.responseBody.includes("Build like a team of hundreds")) {
-      throw new Error("Function returned default response - check deployment");
-    }
-
-    let result;
-    try {
-      result = JSON.parse(response.responseBody);
-    } catch (parseError) {
-      console.error("Failed to parse response:", response.responseBody);
-      throw new Error("Invalid response format from function");
-    }
+    const result = await postJson("/api/ai/expand", {
+      title,
+      description,
+      category,
+      priority,
+    });
 
     if (result.success) {
       return {
@@ -60,13 +42,46 @@ export async function expandIdea(title, description, category, priority) {
         expansion: result.expansion,
       };
     } else {
-      throw new Error(result.error || "Function execution failed");
+      throw new Error(result.error || "Expansion failed");
     }
   } catch (error) {
     console.error("Expansion error:", error);
     return {
       success: false,
       error: error.message || "Expansion failed",
+    };
+  }
+}
+
+export async function generatePitch(
+  title,
+  description,
+  targetAudience,
+  goal
+) {
+  try {
+    await ensureAuthenticated();
+
+    const result = await postJson("/api/ai/pitch", {
+      title,
+      description,
+      targetAudience,
+      goal,
+    });
+
+    if (result.success) {
+      return {
+        success: true,
+        pitch: result.pitch,
+      };
+    } else {
+      throw new Error(result.error || "Pitch generation failed");
+    }
+  } catch (error) {
+    console.error("Pitch generation error:", error);
+    return {
+      success: false,
+      error: error.message || "Pitch generation failed",
     };
   }
 }

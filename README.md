@@ -29,6 +29,32 @@ Curious how Idea Tracker came to life? Explore the full development journey from
 - **Backend:** Appwrite (NoSQL)
 - **Deployment:** Appwrite Sites
 
+## 🌐 Production Deployment (Render + Appwrite)
+
+This project can also be deployed as a **Node service on Render** using Appwrite as the backend:
+
+- **Build command (Render Web Service):**
+  - `npm install && npm run build`
+- **Start command (Render Web Service):**
+  - `npm start` (runs `server.js`, which serves the built app from the `build` folder with SPA routing)
+
+Configure the following **environment variables in Render** (same values as your local `.env`):
+
+- `VITE_APPWRITE_ENDPOINT`
+- `VITE_APPWRITE_PROJECT_ID`
+- `VITE_APPWRITE_DATABASE_ID`
+- `VITE_APPWRITE_COLLECTION_ID`
+- `VITE_APPWRITE_STORAGE_BUCKET_ID`
+- `VITE_APPWRITE_FUNCTION_ID` (AI expansion – Appwrite Function ID)
+- `VITE_APPWRITE_PITCH_FUNCTION_ID` (AI pitch – Appwrite Function ID)
+- `VITE_SKIP_EMAIL_VERIFICATION` (optional)
+- Social login client IDs/secrets if you use them:
+  - `VITE_GOOGLE_CLIENT_ID`, `VITE_GOOGLE_CLIENT_SECRET`
+  - `VITE_GITHUB_CLIENT_ID`, `VITE_GITHUB_CLIENT_SECRET`
+  - `VITE_DISCORD_CLIENT_ID`, `VITE_DISCORD_CLIENT_SECRET`
+
+> **Important:** AI provider secrets like `GEMINI_API_KEY` **must be stored only in Appwrite Function secrets**, not in Render. The frontend calls Appwrite Functions, and those functions call Gemini using the secret.
+
 ## ✨ Features
 
 ### Core Features

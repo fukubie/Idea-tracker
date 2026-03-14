@@ -4,6 +4,7 @@ import { useIdeas } from "../lib/context/ideas";
 import { motion, AnimatePresence } from "framer-motion";
 import FlipWords from "../components/FlipWords";
 import { AIExpansion } from "../components/dialogs/AIExpansion";
+import { AIPitch } from "../components/dialogs/AIPitch";
 import { CustomCategory } from "../components/dialogs/CustomCategory";
 import { DeleteIdea } from "../components/dialogs/DeleteIdea";
 import moment from "moment";
@@ -85,6 +86,8 @@ export function Home({ navigate }) {
 
   const [aiModalOpen, setAiModalOpen] = useState(false);
   const [selectedIdea, setSelectedIdea] = useState(null);
+  const [pitchModalOpen, setPitchModalOpen] = useState(false);
+  const [selectedPitchIdea, setSelectedPitchIdea] = useState(null);
 
   const [searchState, setSearchState] = useState({
     results: [],
@@ -106,6 +109,7 @@ export function Home({ navigate }) {
       if (e.key === "Escape") {
         if (deleteConfirm) setDeleteConfirm(null);
         if (aiModalOpen) setAiModalOpen(false);
+        if (pitchModalOpen) setPitchModalOpen(false);
         if (showCategoryForm) setShowCategoryForm(false);
       }
     };
@@ -176,6 +180,11 @@ export function Home({ navigate }) {
   const handleAIExpansion = (idea) => {
     setSelectedIdea(idea);
     setAiModalOpen(true);
+  };
+
+  const handleAIPitch = (idea) => {
+    setSelectedPitchIdea(idea);
+    setPitchModalOpen(true);
   };
 
   const handleSubmit = async (e) => {
@@ -1366,7 +1375,7 @@ export function Home({ navigate }) {
                             </h3>
 
                             {user.current?.$id === idea.userId && (
-                              <div className="flex space-x-2 flex-shrink-0 relative">
+                            <div className="flex space-x-2 flex-shrink-0 relative">
                                 {/* Mark Complete/Active */}
                                 <div className="relative group/status">
                                   {idea.status === "completed" ? (
@@ -1410,6 +1419,22 @@ export function Home({ navigate }) {
                                   </motion.button>
                                   <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover/expand:opacity-100 transition-opacity duration-300 whitespace-nowrap pointer-events-none z-20 shadow-lg">
                                     Expand with AI
+                                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-2 border-r-2 border-t-2 border-transparent border-t-gray-900"></div>
+                                  </div>
+                                </div>
+
+                                {/* Generate Pitch with AI */}
+                                <div className="relative group/pitch">
+                                  <motion.button
+                                    onClick={() => handleAIPitch(idea)}
+                                    className="text-[#FD366E] hover:text-[#FD366E]/90 p-1 rounded-md hover:bg-[#FD366E]/10 transition-colors"
+                                    whileHover={{ scale: 1.1 }}
+                                    whileTap={{ scale: 0.9 }}
+                                  >
+                                    <Sparkles className="w-5 h-5" />
+                                  </motion.button>
+                                  <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover/pitch:opacity-100 transition-opacity duration-300 whitespace-nowrap pointer-events-none z-20 shadow-lg">
+                                    Generate AI Pitch
                                     <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-2 border-r-2 border-t-2 border-transparent border-t-gray-900"></div>
                                   </div>
                                 </div>
@@ -1651,6 +1676,17 @@ export function Home({ navigate }) {
         }}
         onExpand={ideas.expandWithAI}
       />
+
+  {/* AI Pitch Modal */}
+  <AIPitch
+    idea={selectedPitchIdea}
+    isOpen={pitchModalOpen}
+    onClose={() => {
+      setPitchModalOpen(false);
+      setSelectedPitchIdea(null);
+    }}
+    onGenerate={ideas.generatePitchWithAI}
+  />
 
       {/* Delete Idea Modal */}
       <DeleteIdea
