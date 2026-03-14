@@ -2,23 +2,7 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import lingoCompiler from "lingo.dev/compiler";
 
-export default defineConfig(() =>
-  lingoCompiler.vite({
-    sourceRoot: "src",
-    sourceLocale: "en",
-    targetLocales: ["es", "fr", "de", "ru"],
-    models: {
-      "en:es": "google:gemini-1.5-flash",
-      "en:fr": "google:gemini-1.5-flash",
-      "en:de": "google:gemini-1.5-flash",
-      "en:ru": "google:gemini-1.5-flash",
-    },
-    includePattern: "**/*.{js,jsx}",
-    excludePattern: "**/node_modules/**",
-    skipEmptyTranslations: true,
-    fallbackToSource: true,
-    ignoreParseErrors: true,
-  })({
+const baseConfig = {
     plugins: [react()],
     define: {
       "process.env.VITE_APPWRITE_ENDPOINT": JSON.stringify(
@@ -79,5 +63,27 @@ export default defineConfig(() =>
     build: {
       outDir: "build",
     },
-  })
-);
+};
+
+const useLingo = process.env.GOOGLE_API_KEY;
+export default defineConfig(() => {
+  if (useLingo) {
+    return lingoCompiler.vite({
+      sourceRoot: "src",
+      sourceLocale: "en",
+      targetLocales: ["es", "fr", "de", "ru"],
+      models: {
+        "en:es": "google:gemini-1.5-flash",
+        "en:fr": "google:gemini-1.5-flash",
+        "en:de": "google:gemini-1.5-flash",
+        "en:ru": "google:gemini-1.5-flash",
+      },
+      includePattern: "**/*.{js,jsx}",
+      excludePattern: "**/node_modules/**",
+      skipEmptyTranslations: true,
+      fallbackToSource: true,
+      ignoreParseErrors: true,
+    })(baseConfig);
+  }
+  return baseConfig;
+});
