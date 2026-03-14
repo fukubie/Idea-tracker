@@ -1,3 +1,8 @@
+import { functions } from "../appwrite";
+
+const AI_EXPANSION_FUNCTION_ID = import.meta.env.VITE_APPWRITE_FUNCTION_ID;
+const AI_PITCH_FUNCTION_ID = import.meta.env.VITE_APPWRITE_PITCH_FUNCTION_ID;
+
 async function ensureAuthenticated() {
   const { account } = await import("../appwrite");
   try {
@@ -8,28 +13,45 @@ async function ensureAuthenticated() {
   }
 }
 
-async function postJson(url, payload) {
-  const response = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(payload),
-  });
+async function executeFunction(functionId, payload) {
+  const response = await functions.createExecution(
+    functionId,
+    JSON.stringify(payload)
+  );
 
-  if (!response.ok) {
-    const text = await response.text();
-    throw new Error(text || response.statusText);
+  if (response.status !== "completed") {
+    console.error("Function execution failed:", response);
+    throw new Error(
+      `Function execution failed with status: ${response.status}`
+    );
   }
 
-  return response.json();
+  if (response.errors && response.errors.trim()) {
+    console.error("Function errors:", response.errors);
+    throw new Error(`Function error: ${response.errors}`);
+  }
+
+  if (!response.responseBody || response.responseBody.trim() === "") {
+    throw new Error("Function returned empty response");
+  }
+
+  if (response.responseBody.includes("Build like a team of hundreds")) {
+    throw new Error("Function returned default response - check deployment");
+  }
+
+  try {
+    return JSON.parse(response.responseBody);
+  } catch (parseError) {
+    console.error("Failed to parse response:", response.responseBody);
+    throw new Error("Invalid response format from function");
+  }
 }
 
 export async function expandIdea(title, description, category, priority) {
   try {
     await ensureAuthenticated();
 
-    const result = await postJson("/api/ai/expand", {
+    const result = await executeFunction(AI_EXPANSION_FUNCTION_ID, {
       title,
       description,
       category,
@@ -42,7 +64,7 @@ export async function expandIdea(title, description, category, priority) {
         expansion: result.expansion,
       };
     } else {
-      throw new Error(result.error || "Expansion failed");
+      throw new Error(result.error || "Function execution failed");
     }
   } catch (error) {
     console.error("Expansion error:", error);
@@ -62,7 +84,11 @@ export async function generatePitch(
   try {
     await ensureAuthenticated();
 
-    const result = await postJson("/api/ai/pitch", {
+    if (!AI_PITCH_FUNCTION_ID) {
+      throw new Error("AI pitch function is not configured");
+    }
+
+    const result = await executeFunction(AI_PITCH_FUNCTION_ID, {
       title,
       description,
       targetAudience,
