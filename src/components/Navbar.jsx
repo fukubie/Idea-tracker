@@ -18,7 +18,6 @@ import {
   Bell,
   Compass,
 } from "lucide-react";
-import { SiGithub } from "react-icons/si";
 import AnnouncementBar from "./AnnouncementBar";
 
 function Navbar({ navigate, currentPage }) {
@@ -244,28 +243,6 @@ function Navbar({ navigate, currentPage }) {
                     <LanguageSwitcher />
                   </div>
 
-                  <motion.a
-                    href="https://github.com/AbhiVarde/Idea-tracker"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group relative sm:hidden flex items-center justify-center text-gray-700 dark:text-white p-2 rounded-lg transition-all duration-300"
-                    whileHover={{
-                      scale: 1.15,
-                      y: -2,
-                      transition: {
-                        type: "spring",
-                        stiffness: 300,
-                        damping: 20,
-                      },
-                    }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <SiGithub className="w-5 h-5" />
-                    <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 dark:bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap pointer-events-none z-10">
-                      View Code
-                    </div>
-                  </motion.a>
-
                   <div
                     className="relative ml-2 sm:ml-4 pl-3 border-l border-gray-300 dark:border-gray-700"
                     ref={dropdownRef}
@@ -357,25 +334,6 @@ function Navbar({ navigate, currentPage }) {
                     </div>
 
                     <ThemeSelector variant="mobile-dropdown" />
-
-                    <motion.a
-                      href="https://github.com/AbhiVarde/Idea-tracker"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-center text-gray-700 dark:text-white p-2 rounded-lg transition-all duration-300"
-                      whileHover={{
-                        scale: 1.15,
-                        y: -2,
-                        transition: {
-                          type: "spring",
-                          stiffness: 300,
-                          damping: 20,
-                        },
-                      }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      <SiGithub className="w-5 h-5" />
-                    </motion.a>
 
                     <NavButton
                       icon={LogIn}
