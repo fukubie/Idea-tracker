@@ -361,6 +361,11 @@ export function IdeasProvider({ children }) {
           userProfilePicture:
             getUserAvatarUrl(user, getProfilePictureUrl) || "",
           status: "active",
+          // Normalize likes/likedBy to match Appwrite schema
+          likes: typeof idea.likes === "number" ? idea.likes : 0,
+          likedBy: JSON.stringify(
+            Array.isArray(idea.likedBy) ? idea.likedBy : []
+          ),
         },
         permissions // Use the permissions array
       );
@@ -516,7 +521,19 @@ export function IdeasProvider({ children }) {
       const currentIdea = targetIdeas.find((idea) => idea.$id === ideaId);
       if (!currentIdea) return;
 
-      const likedBy = currentIdea.likedBy || [];
+      // Normalize likedBy from Appwrite (stored as string) into an array
+      let likedBy = [];
+      const rawLikedBy = currentIdea.likedBy;
+      if (Array.isArray(rawLikedBy)) {
+        likedBy = rawLikedBy;
+      } else if (typeof rawLikedBy === "string" && rawLikedBy.trim()) {
+        try {
+          likedBy = JSON.parse(rawLikedBy);
+          if (!Array.isArray(likedBy)) likedBy = [];
+        } catch {
+          likedBy = [];
+        }
+      }
       const hasLiked = likedBy.includes(user.$id);
 
       let newLikedBy;
@@ -539,7 +556,7 @@ export function IdeasProvider({ children }) {
         ideaId,
         {
           likes: newLikes,
-          likedBy: newLikedBy,
+          likedBy: JSON.stringify(newLikedBy),
         }
       );
 

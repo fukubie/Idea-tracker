@@ -71,9 +71,11 @@ export function UserProvider({ children }) {
     }
   }, [isInitialized]);
 
-  // Check if verified
-  const isUserVerified = () =>
-    user?.prefs?.authMethod === "oauth" || user?.emailVerification === true;
+  // Check if verified (skip check when VITE_SKIP_EMAIL_VERIFICATION=true, e.g. if verification emails don't arrive)
+  const isUserVerified = () => {
+    if (import.meta.env.VITE_SKIP_EMAIL_VERIFICATION === "true") return true;
+    return user?.prefs?.authMethod === "oauth" || user?.emailVerification === true;
+  };
 
   // Send verification email
   const sendVerificationEmail = async () => {
