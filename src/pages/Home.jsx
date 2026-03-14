@@ -609,25 +609,125 @@ export function Home({ navigate }) {
 
   return (
     <>
-      <div className="max-w-2xl mx-auto p-1 sm:p-4 space-y-4">
-        <motion.div
-          className="text-center"
-          initial={{ opacity: 0, y: -30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-        >
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-medium dark:text-white text-gray-900 mb-3 tracking-wide">
-            Your Creative{" "}
-            <FlipWords
-              words={WORDS}
-              duration={3000}
-              className="bg-gradient-to-r from-[#C40C0C] via-[#FF6500] to-[#F6CE71] bg-clip-text text-transparent"
-            />
-          </h1>
-          <p className="dark:text-gray-400 text-gray-600 text-base sm:text-lg max-w-xl mx-auto leading-relaxed sm:leading-loose">
-            Track ideas with clarity and bring them to life naturally.
-          </p>
-        </motion.div>
+      <div className="max-w-5xl mx-auto p-1 sm:p-4 space-y-6">
+        {/* Hero section for VerQyx – show only for guests */}
+        {!user.current && (
+          <motion.section
+            className="rounded-3xl overflow-hidden bg-gradient-to-br from-[#0B0B0C] via-[#18181B] to-[#2A1206] border border-white/5 shadow-[0_14px_35px_rgba(0,0,0,0.45)]"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+          >
+            <div className="grid md:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] gap-4 md:gap-6 p-3 sm:p-5 md:p-6 items-center">
+              {/* Left: mission copy */}
+              <div className="space-y-3 sm:space-y-4">
+              <div className="inline-flex items-center gap-2 rounded-full bg-black/40 border border-white/10 px-3 py-1 text-[11px] sm:text-xs uppercase tracking-[0.18em] text-[#F6CE71]">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#FF6500] shadow-[0_0_0_4px_rgba(255,101,0,0.45)]" />
+                AI-powered idea-to-impact flow
+              </div>
+
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold leading-snug sm:leading-snug md:leading-[1.1]">
+                <span className="text-white">Turn true ideas into</span>{" "}
+                <span className="bg-gradient-to-r from-[#FF6500] via-[#CC561E] to-[#F6CE71] bg-clip-text text-transparent">
+                  unknown potential
+                </span>
+                <span className="block mt-2 text-sm sm:text-base text-gray-300 font-normal">
+                  Ver
+                  <span className="font-semibold text-white">Qyx</span> guides
+                  you from rough thoughts to structured, pitch‑ready projects.
+                </span>
+              </h1>
+
+              <p className="text-gray-300/90 text-xs sm:text-sm md:text-[13px] leading-relaxed max-w-xl">
+                Submit ideas as a <span className="font-semibold">Creator</span>,
+                receive structured feedback from a{" "}
+                <span className="font-semibold">Reviewer</span>, and let AI
+                refine everything into clear plans, tasks, and pitch‑ready
+                summaries.
+              </p>
+
+              <div className="grid sm:grid-cols-3 gap-2 sm:gap-3 text-[11px] sm:text-xs">
+                <div className="rounded-2xl bg-white/5 border border-white/10 p-2.5 sm:p-3 space-y-1.5">
+                  <p className="font-medium text-white flex items-center gap-1.5">
+                    <span className="inline-block h-1.5 w-1.5 rounded-full bg-[#FF6500]" />
+                    1. Submit & review
+                  </p>
+                  <p className="text-gray-300/80">
+                    Creators share ideas, reviewers add structured, useful
+                    feedback.
+                  </p>
+                </div>
+                <div className="rounded-2xl bg-white/5 border border-white/10 p-2.5 sm:p-3 space-y-1.5">
+                  <p className="font-medium text-white flex items-center gap-1.5">
+                    <span className="inline-block h-1.5 w-1.5 rounded-full bg-[#C40C0C]" />
+                    2. Refine with AI
+                  </p>
+                  <p className="text-gray-300/80">
+                    VerQyx clarifies, rewrites, and strengthens concepts with
+                    focused AI insight.
+                  </p>
+                </div>
+                <div className="rounded-2xl bg-white/5 border border-white/10 p-2.5 sm:p-3 space-y-1.5">
+                  <p className="font-medium text-white flex items-center gap-1.5">
+                    <span className="inline-block h-1.5 w-1.5 rounded-full bg-[#F6CE71]" />
+                    3. Plan & pitch
+                  </p>
+                  <p className="text-gray-300/80">
+                    Auto‑generate tasks, priorities, and a pitch‑ready summary
+                    you can share.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2.5">
+                <motion.button
+                  onClick={() => navigate("login")}
+                  className="inline-flex items-center justify-center px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-gradient-to-r from-[#C40C0C] via-[#FF6500] to-[#F6CE71] text-white shadow-[0_10px_30px_rgba(255,101,0,0.55)] hover:brightness-110 transition-all duration-300"
+                  whileHover={{ scale: 1.03, y: -1 }}
+                  whileTap={{ scale: 0.97 }}
+                >
+                  Get started with VerQyx
+                </motion.button>
+
+                <p className="text-[10px] sm:text-xs text-gray-400 max-w-xs">
+                  Built for students, hackathon teams, startups, and project
+                  groups who want a clear path from idea to execution.
+                </p>
+              </div>
+            </div>
+
+            {/* Right: hero image */}
+            <motion.div
+              className="relative h-32 sm:h-44 md:h-52 lg:h-60 rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-br from-[#FF6500]/40 via-[#C40C0C]/40 to-[#1A1207]"
+              initial={{ opacity: 0, scale: 0.95, y: 6 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ duration: 0.45, delay: 0.08 }}
+            >
+              <img
+                src="https://images.unsplash.com/photo-1760172287467-16dd246c0ed0?fm=jpg&q=80&w=1600&auto=format&fit=crop"
+                alt="Abstract orange gradient background representing VerQyx idea flow"
+                className="absolute inset-0 h-full w-full object-cover opacity-90"
+                loading="lazy"
+              />
+              <div className="absolute inset-0 bg-gradient-to-tr from-black/55 via-black/10 to-transparent" />
+              <div className="absolute bottom-2.5 left-3 right-3 flex flex-col gap-1 text-[10px] sm:text-[11px] md:text-xs text-gray-100">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="font-medium tracking-wide">
+                    From spark to strategy
+                  </span>
+                  <span className="px-2 py-0.5 rounded-full bg-black/40 border border-white/15 text-[9px] uppercase tracking-[0.15em] text-[#F6CE71]">
+                    Creator · Reviewer · AI
+                  </span>
+                </div>
+                <p className="text-gray-200/85">
+                  VerQyx combines idea sharing, feedback, AI refinement, and
+                  project planning into one guided flow.
+                </p>
+              </div>
+            </motion.div>
+          </div>
+        </motion.section>
+        )}
 
         {user.current ? (
           <motion.section
@@ -821,9 +921,13 @@ export function Home({ navigate }) {
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center space-x-2">
                   <UserIcon className="w-7 h-7 text-[#FF6500]" />
-                  <h2 className="sm:hidden text-lg font-medium">Join now</h2>
+                  <h2 className="sm:hidden text-lg font-medium">Join VerQyx</h2>
                   <h2 className="hidden sm:flex text-lg font-medium">
-                    Join Idea Tracker
+                    Join{" "}
+                    <span className="ml-1">
+                      <span className="text-gray-900 dark:text-white">Ver</span>
+                      <span className="text-[#FF6500]">Qyx</span>
+                    </span>
                   </h2>
                 </div>
 
@@ -838,7 +942,7 @@ export function Home({ navigate }) {
               </div>
 
               <p className="dark:text-gray-400 text-gray-600 text-start">
-                Login to start tracking your amazing ideas
+                Log in to move your ideas from raw concept to pitch‑ready plans.
               </p>
             </motion.section>
 
@@ -1376,6 +1480,37 @@ export function Home({ navigate }) {
 
                             {user.current?.$id === idea.userId && (
                             <div className="flex space-x-2 flex-shrink-0 relative">
+                                {/* AI by Gemini – first (primary actions) */}
+                                <div className="relative group/expand">
+                                  <motion.button
+                                    onClick={() => handleAIExpansion(idea)}
+                                    className="text-[#FF6500] hover:text-[#FF6500]/90 p-1 rounded-md hover:bg-[#FF6500]/10 transition-colors"
+                                    whileHover={{ scale: 1.1 }}
+                                    whileTap={{ scale: 0.9 }}
+                                  >
+                                    <Sparkles className="w-5 h-5" />
+                                  </motion.button>
+                                  <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover/expand:opacity-100 transition-opacity duration-300 whitespace-nowrap pointer-events-none z-20 shadow-lg">
+                                    Expand with AI (Gemini)
+                                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-2 border-r-2 border-t-2 border-transparent border-t-gray-900"></div>
+                                  </div>
+                                </div>
+
+                                <div className="relative group/pitch">
+                                  <motion.button
+                                    onClick={() => handleAIPitch(idea)}
+                                    className="text-[#FF6500] hover:text-[#FF6500]/90 p-1 rounded-md hover:bg-[#FF6500]/10 transition-colors"
+                                    whileHover={{ scale: 1.1 }}
+                                    whileTap={{ scale: 0.9 }}
+                                  >
+                                    <Sparkles className="w-5 h-5" />
+                                  </motion.button>
+                                  <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover/pitch:opacity-100 transition-opacity duration-300 whitespace-nowrap pointer-events-none z-20 shadow-lg">
+                                    Generate AI Pitch (Gemini)
+                                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-2 border-r-2 border-t-2 border-transparent border-t-gray-900"></div>
+                                  </div>
+                                </div>
+
                                 {/* Mark Complete/Active */}
                                 <div className="relative group/status">
                                   {idea.status === "completed" ? (
@@ -1403,38 +1538,6 @@ export function Home({ navigate }) {
                                     {idea.status === "completed"
                                       ? "Mark as Active"
                                       : "Mark as Complete"}
-                                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-2 border-r-2 border-t-2 border-transparent border-t-gray-900"></div>
-                                  </div>
-                                </div>
-
-                                {/* Expand with AI */}
-                                <div className="relative group/expand">
-                                  <motion.button
-                                    onClick={() => handleAIExpansion(idea)}
-                                    className="text-[#FD366E] hover:text-[#FD366E]/90 p-1 rounded-md hover:bg-[#FD366E]/10 transition-colors"
-                                    whileHover={{ scale: 1.1 }}
-                                    whileTap={{ scale: 0.9 }}
-                                  >
-                                    <Sparkles className="w-5 h-5" />
-                                  </motion.button>
-                                  <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover/expand:opacity-100 transition-opacity duration-300 whitespace-nowrap pointer-events-none z-20 shadow-lg">
-                                    Expand with AI
-                                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-2 border-r-2 border-t-2 border-transparent border-t-gray-900"></div>
-                                  </div>
-                                </div>
-
-                                {/* Generate Pitch with AI */}
-                                <div className="relative group/pitch">
-                                  <motion.button
-                                    onClick={() => handleAIPitch(idea)}
-                                    className="text-[#FD366E] hover:text-[#FD366E]/90 p-1 rounded-md hover:bg-[#FD366E]/10 transition-colors"
-                                    whileHover={{ scale: 1.1 }}
-                                    whileTap={{ scale: 0.9 }}
-                                  >
-                                    <Sparkles className="w-5 h-5" />
-                                  </motion.button>
-                                  <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover/pitch:opacity-100 transition-opacity duration-300 whitespace-nowrap pointer-events-none z-20 shadow-lg">
-                                    Generate AI Pitch
                                     <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-2 border-r-2 border-t-2 border-transparent border-t-gray-900"></div>
                                   </div>
                                 </div>

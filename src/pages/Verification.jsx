@@ -47,7 +47,7 @@ export function VerificationPage() {
         </h1>
         <p className="text-gray-600 dark:text-gray-400 mb-6">
           Check your inbox at <strong>{user.email}</strong> and verify your
-          email to continue using Idea Tracker.
+          email to continue exploring your ideas with VerQyx.
         </p>
         <motion.button
           onClick={handleResend}

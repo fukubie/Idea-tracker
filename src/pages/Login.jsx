@@ -109,11 +109,16 @@ export function Login({ navigate }) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h1 className="text-2xl sm:text-3xl font-medium text-gray-900 dark:text-white mb-2">
-            Welcome to Idea Tracker
+          <h1 className="text-2xl sm:text-3xl font-semibold text-gray-900 dark:text-white mb-2">
+            Welcome to{" "}
+            <span className="inline-block">
+              <span className="text-gray-900 dark:text-white">Ver</span>
+              <span className="text-[#FF6500]">Qyx</span>
+            </span>
           </h1>
-          <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base">
-            Professional idea management for developers
+          <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base max-w-md mx-auto">
+            An AI-powered idea‑to‑impact platform for turning rough thoughts into
+            organized, pitch‑ready project plans.
           </p>
         </motion.div>
 

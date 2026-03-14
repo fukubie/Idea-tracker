@@ -4,9 +4,7 @@ const EMAIL_FUNCTION_ID = import.meta.env.VITE_APPWRITE_EMAIL_FUNCTION_ID;
 
 class EmailService {
   constructor() {
-    if (!EMAIL_FUNCTION_ID) {
-      console.warn("VITE_APPWRITE_EMAIL_FUNCTION_ID is not configured");
-    }
+    // Email function is optional; no console warning when not set
   }
 
   async sendNotification(type, userEmail, userName, additionalData = {}) {

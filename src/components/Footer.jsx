@@ -15,7 +15,10 @@ function Footer() {
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.4 }}
         >
-          Idea Tracker
+          <span className="font-semibold">
+            <span className="text-black dark:text-white">Ver</span>
+            <span className="text-[#FF6500]">Qyx</span>
+          </span>
         </motion.div>
       </div>
     </motion.footer>

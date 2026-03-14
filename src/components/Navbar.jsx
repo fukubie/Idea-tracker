@@ -11,13 +11,13 @@ import {
   User,
   LogIn,
   LogOut,
-  Lightbulb,
-  Sparkles,
   ChevronDown,
   Settings,
   Bell,
   Compass,
 } from "lucide-react";
+
+const PRIMARY_LOGO_SRC = "/images/logo%20(2).png";
 import AnnouncementBar from "./AnnouncementBar";
 
 function Navbar({ navigate, currentPage }) {
@@ -158,21 +158,20 @@ function Navbar({ navigate, currentPage }) {
           <div className="flex flex-row sm:items-center justify-between gap-2 sm:gap-0 py-4 sm:py-0">
             <motion.button
               onClick={() => navigate("home")}
-              className="flex items-center space-x-3 text-gray-900 dark:text-white font-medium text-xl"
+              className="flex items-center space-x-3 text-gray-900 dark:text-white font-semibold text-xl"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               transition={{ duration: 0.2 }}
             >
-              <motion.div
-                className="flex items-center justify-center"
-                whileHover={{ scale: 1.05 }}
-              >
-                <div className="relative">
-                  <Lightbulb className="w-7 h-7 text-[#FF6500]" />
-                  <Sparkles className="w-3 h-3 text-[#FF6500] absolute -top-1 -right-1 animate-pulse" />
-                </div>
-              </motion.div>
-              <span>Idea Tracker</span>
+              <img
+                src={PRIMARY_LOGO_SRC}
+                alt="VerQyx"
+                className="h-11 w-auto object-contain"
+              />
+              <span>
+                <span className="text-black dark:text-white">Ver</span>
+                <span className="text-[#FF6500]">Qyx</span>
+              </span>
             </motion.button>
 
             <div className="flex items-center space-x-2">
@@ -198,22 +197,23 @@ function Navbar({ navigate, currentPage }) {
           <div className="flex flex-row sm:items-center justify-between gap-2 sm:gap-0 py-2 sm:py-0">
             <motion.button
               onClick={() => navigate("home")}
-              className="flex items-center space-x-3 text-gray-900 dark:text-white font-bold text-xl"
+              className="flex items-center space-x-3 text-gray-900 dark:text-white font-extrabold text-xl"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               transition={{ duration: 0.2 }}
             >
-              <motion.div
-                className="flex items-center justify-center"
-                whileHover={{ scale: 1.05 }}
-              >
-                <div className="relative">
-                  <Lightbulb className="w-7 h-7 text-[#FF6500]" />
-                  <Sparkles className="w-3 h-3 text-[#FF6500] absolute -top-1 -right-1 animate-pulse" />
-                </div>
-              </motion.div>
-              <span className="hidden font-medium sm:inline">
-                {!user?.current && "Idea Tracker"}
+              <img
+                src={PRIMARY_LOGO_SRC}
+                alt="VerQyx"
+                className="h-11 w-auto object-contain"
+              />
+              <span className="hidden font-semibold sm:inline">
+                {!user?.current && (
+                  <>
+                    <span className="text-black dark:text-white">Ver</span>
+                    <span className="text-[#FF6500]">Qyx</span>
+                  </>
+                )}
               </span>
             </motion.button>
 
