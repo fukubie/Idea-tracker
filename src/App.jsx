@@ -20,6 +20,14 @@ function AppContent() {
   const { theme } = useTheme();
   const [loading, setLoading] = useState(true);
 
+  // Global app background based on selected theme
+  const backgroundClass =
+    theme === "light"
+      ? "bg-[#E9FCE3]" // light green for light mode
+      : theme === "dark"
+        ? "bg-[#C40C0C]" // dark orange for dark mode
+        : "bg-[#5C4033]"; // brown when using system theme
+
   useEffect(() => {
     const path = window.location.pathname;
 
@@ -94,8 +102,10 @@ function AppContent() {
       !userContext.userDataLoaded
     ) {
       return (
-        <div className="min-h-screen bg-[#f4f4f7] dark:bg-[#000000] flex flex-col items-center justify-center text-gray-900 dark:text-white">
-          <div className="w-6 h-6 border-2 border-[#FD366E]/30 border-t-[#FD366E] rounded-full animate-spin mb-3"></div>
+        <div
+          className={`min-h-screen ${backgroundClass} flex flex-col items-center justify-center text-gray-900 dark:text-white`}
+        >
+          <div className="w-6 h-6 border-2 border-[#FF6500]/30 border-t-[#FF6500] rounded-full animate-spin mb-3"></div>
           <p className="text-sm opacity-80">
             Hang tight… warming up your ideas ✨
           </p>
@@ -151,7 +161,7 @@ function AppContent() {
 
   return (
     <div
-      className="min-h-screen bg-[#f4f4f7] dark:bg-[#000000] text-gray-900 dark:text-white transition-colors duration-300 flex flex-col"
+      className={`min-h-screen ${backgroundClass} text-gray-900 dark:text-white transition-colors duration-300 flex flex-col`}
       data-theme={theme}
     >
       <UserProvider>

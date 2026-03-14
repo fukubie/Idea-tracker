@@ -612,7 +612,7 @@ export function Home({ navigate }) {
             <FlipWords
               words={WORDS}
               duration={3000}
-              className="text-[#FD366E]"
+              className="bg-gradient-to-r from-[#C40C0C] via-[#FF6500] to-[#F6CE71] bg-clip-text text-transparent"
             />
           </h1>
           <p className="dark:text-gray-400 text-gray-600 text-base sm:text-lg max-w-xl mx-auto leading-relaxed sm:leading-loose">
@@ -632,7 +632,7 @@ export function Home({ navigate }) {
                 <motion.button
                   key="add-button"
                   onClick={() => setShowForm(true)}
-                  className="w-full flex items-center justify-center space-x-3 p-2 bg-[#FD366E]/10 hover:bg-[#FD366E]/20 dark:border-[#FD366E]/30 border-[#FD366E]/20 hover:border-[#FD366E]/50 rounded-xl transition-all duration-300 text-[#FD366E]"
+                  className="w-full flex items-center justify-center space-x-3 p-2 bg-gradient-to-r from-[#C40C0C] via-[#FF6500] to-[#F6CE71] text-white rounded-2xl shadow-lg shadow-[#FF6500]/30 hover:shadow-xl hover:brightness-105 transition-all duration-300"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
@@ -674,7 +674,7 @@ export function Home({ navigate }) {
                           onChange={(e) => setTitle(e.target.value)}
                           maxLength={100}
                           minLength={3}
-                          className="w-full text-sm px-3 py-2 dark:bg-gray-800/50 bg-gray-50 border-[0.5px] dark:border-gray-700 border-gray-200 rounded-lg dark:text-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#FD366E] focus:border-transparent transition-all duration-200"
+                          className="w-full text-sm px-3 py-2 dark:bg-gray-800/50 bg-gray-50 border-[0.5px] dark:border-gray-700 border-gray-200 rounded-lg dark:text-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#FF6500] focus:border-transparent transition-all duration-200"
                           required
                         />
                         <CategorySelect
@@ -695,7 +695,7 @@ export function Home({ navigate }) {
                         rows={3}
                         maxLength={500}
                         minLength={10}
-                        className="w-full text-sm px-3 py-2 dark:bg-gray-800/50 bg-gray-50 border-[0.5px] dark:border-gray-700 border-gray-200 rounded-lg dark:text-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#FD366E] focus:border-transparent resize-none transition-all duration-200"
+                        className="w-full text-sm px-3 py-2 dark:bg-gray-800/50 bg-gray-50 border-[0.5px] dark:border-gray-700 border-gray-200 rounded-lg dark:text-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#FF6500] focus:border-transparent resize-none transition-all duration-200"
                       />
 
                       {/* Priority + GitHub + Preview */}
@@ -703,7 +703,7 @@ export function Home({ navigate }) {
                         <select
                           value={priority}
                           onChange={(e) => setPriority(e.target.value)}
-                          className="w-full text-sm px-3 py-2 dark:bg-gray-800/50 bg-gray-50 border-[0.5px] dark:border-gray-700 border-gray-200 rounded-lg dark:text-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#FD366E] focus:border-transparent transition-all duration-200"
+                          className="w-full text-sm px-3 py-2 dark:bg-gray-800/50 bg-gray-50 border-[0.5px] dark:border-gray-700 border-gray-200 rounded-lg dark:text-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#FF6500] focus:border-transparent transition-all duration-200"
                         >
                           {PRIORITIES.map((pri) => (
                             <option
@@ -724,7 +724,7 @@ export function Home({ navigate }) {
                             value={previewUrl}
                             onChange={(e) => setPreviewUrl(e.target.value)}
                             maxLength={200}
-                            className="w-full text-sm pl-10 pr-3 py-2 dark:bg-gray-800/50 bg-gray-50 border-[0.5px] dark:border-gray-700 border-gray-200 rounded-lg dark:text-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#FD366E] focus:border-transparent transition-all duration-200"
+                            className="w-full text-sm pl-10 pr-3 py-2 dark:bg-gray-800/50 bg-gray-50 border-[0.5px] dark:border-gray-700 border-gray-200 rounded-lg dark:text-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#FF6500] focus:border-transparent transition-all duration-200"
                           />
                         </div>
 
@@ -736,7 +736,7 @@ export function Home({ navigate }) {
                             value={githubUrl}
                             onChange={(e) => setGithubUrl(e.target.value)}
                             maxLength={200}
-                            className="w-full text-sm pl-10 pr-3 py-2 dark:bg-gray-800/50 bg-gray-50 border-[0.5px] dark:border-gray-700 border-gray-200 rounded-lg dark:text-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#FD366E] focus:border-transparent transition-all duration-200"
+                            className="w-full text-sm pl-10 pr-3 py-2 dark:bg-gray-800/50 bg-gray-50 border-[0.5px] dark:border-gray-700 border-gray-200 rounded-lg dark:text-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#FF6500] focus:border-transparent transition-all duration-200"
                           />
                         </div>
                       </div>
@@ -749,7 +749,7 @@ export function Home({ navigate }) {
                           value={tags}
                           onChange={(e) => setTags(e.target.value)}
                           maxLength={200}
-                          className="w-full text-sm px-3 py-2 dark:bg-gray-800/50 bg-gray-50 border-[0.5px] dark:border-gray-700 border-gray-200 rounded-lg dark:text-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#FD366E] focus:border-transparent transition-all duration-200"
+                          className="w-full text-sm px-3 py-2 dark:bg-gray-800/50 bg-gray-50 border-[0.5px] dark:border-gray-700 border-gray-200 rounded-lg dark:text-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#FF6500] focus:border-transparent transition-all duration-200"
                         />
                         <div className="flex items-center justify-between px-3 py-2 dark:bg-gray-800/50 bg-gray-50 rounded-lg border-[0.5px] dark:border-gray-700 border-gray-200">
                           <span className="text-sm dark:text-white text-gray-900">
@@ -760,7 +760,7 @@ export function Home({ navigate }) {
                             onClick={() => setIsPublic(!isPublic)}
                             className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors duration-200 ${
                               isPublic
-                                ? "bg-[#FD366E]"
+                                ? "bg-[#FF6500]"
                                 : "bg-gray-300 dark:bg-gray-600"
                             } cursor-pointer`}
                             aria-pressed={isPublic}
@@ -772,7 +772,7 @@ export function Home({ navigate }) {
                               }`}
                             >
                               {isPublic && (
-                                <Check className="w-2 h-2 text-[#FD366E] absolute inset-0 m-auto" />
+                                <Check className="w-2 h-2 text-[#F6CE71] absolute inset-0 m-auto" />
                               )}
                             </span>
                           </button>
@@ -783,7 +783,7 @@ export function Home({ navigate }) {
                     <motion.button
                       type="submit"
                       disabled={isSubmitting}
-                      className="w-full bg-[#FD366E] hover:bg-[#FD366E]/90 disabled:bg-[#FD366E]/50 disabled:cursor-not-allowed text-white font-medium py-2 rounded-xl transition-all duration-300 shadow-lg shadow-[#FD366E]/20 flex items-center justify-center space-x-2"
+                      className="w-full bg-gradient-to-r from-[#C40C0C] via-[#FF6500] to-[#CC561E] hover:brightness-110 disabled:opacity-60 disabled:cursor-not-allowed text-white font-medium py-2 rounded-xl transition-all duration-300 shadow-lg shadow-[#FF6500]/30 flex items-center justify-center space-x-2"
                       whileHover={!isSubmitting ? { scale: 1.02, y: -1 } : {}}
                       whileTap={!isSubmitting ? { scale: 0.98 } : {}}
                     >
@@ -811,7 +811,7 @@ export function Home({ navigate }) {
             >
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center space-x-2">
-                  <UserIcon className="w-7 h-7 text-[#FD366E]" />
+                  <UserIcon className="w-7 h-7 text-[#FF6500]" />
                   <h2 className="sm:hidden text-lg font-medium">Join now</h2>
                   <h2 className="hidden sm:flex text-lg font-medium">
                     Join Idea Tracker
@@ -820,7 +820,7 @@ export function Home({ navigate }) {
 
                 <motion.button
                   onClick={() => navigate("login")}
-                  className="bg-[#FD366E] hover:bg-[#FD366E]/90 text-white font-medium px-6 py-2 rounded-lg transition-all duration-300 shadow-lg shadow-[#FD366E]/20 text-sm"
+                  className="bg-gradient-to-r from-[#C40C0C] via-[#FF6500] to-[#CC561E] text-white font-medium px-6 py-2 rounded-lg transition-all duration-300 shadow-lg shadow-[#FF6500]/30 text-sm hover:brightness-110"
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.95 }}
                 >
@@ -846,7 +846,7 @@ export function Home({ navigate }) {
 
               {loadingPublicIdeas ? (
                 <div className="text-center py-8">
-                  <div className="w-6 h-6 border-2 border-[#FD366E]/30 border-t-[#FD366E] rounded-full animate-spin mx-auto mb-3"></div>
+                  <div className="w-6 h-6 border-2 border-[#FF6500]/30 border-t-[#FF6500] rounded-full animate-spin mx-auto mb-3"></div>
                   <p className="dark:text-gray-400 text-gray-600">
                     Loading ideas...
                   </p>
@@ -878,7 +878,7 @@ export function Home({ navigate }) {
                               className="w-7 h-7 rounded-full object-cover"
                             />
                           ) : (
-                            <div className="w-7 h-7 rounded-full bg-[#FD366E] text-white text-xs font-medium flex items-center justify-center">
+                            <div className="w-7 h-7 rounded-full bg-[#FF6500] text-white text-xs font-medium flex items-center justify-center">
                               {idea.userName
                                 ? idea.userName
                                     .split(" ")
@@ -914,7 +914,7 @@ export function Home({ navigate }) {
 
                       {/* Footer */}
                       <div className="flex justify-between items-center text-xs text-gray-500 dark:text-gray-400 mt-auto pt-2 border-t border-gray-100 dark:border-gray-800 gap-2 min-w-0">
-                        <span className="bg-[#FD366E]/10 text-[#FD366E] px-2 py-0.5 rounded-full truncate break-words break-all min-w-0 max-w-[50%]">
+                        <span className="bg-[#FF6500]/10 text-[#FF6500] px-2 py-0.5 rounded-full truncate break-words break-all min-w-0 max-w-[50%]">
                           {idea.category}
                         </span>
 
@@ -924,7 +924,7 @@ export function Home({ navigate }) {
                               href={idea.previewUrl}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-[#FD366E] hover:text-[#FD366E]/80 transition-colors"
+                              className="text-[#FF6500] hover:text-[#FF6500]/80 transition-colors"
                             >
                               <Globe className="w-4 h-4 shrink-0" />
                             </a>
@@ -934,7 +934,7 @@ export function Home({ navigate }) {
                               href={idea.githubUrl}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-[#FD366E] hover:text-[#FD366E]/80 transition-colors"
+                              className="text-[#FF6500] hover:text-[#FF6500]/80 transition-colors"
                             >
                               <Github className="w-4 h-4 shrink-0" />
                             </a>
@@ -966,20 +966,20 @@ export function Home({ navigate }) {
           >
             <div className="flex items-center gap-2 md:gap-4">
               <div className="relative group flex-1">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 dark:text-gray-400 text-gray-500 group-focus-within:text-[#FD366E] transition-colors duration-200 w-5 h-5" />
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 dark:text-gray-400 text-gray-500 group-focus-within:text-[#FF6500] transition-colors duration-200 w-5 h-5" />
 
                 <input
                   type="text"
                   placeholder="Search ideas by title, description, or tags..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full dark:bg-[#000000] bg-white dark:border-gray-800 border-gray-200 border rounded-xl pl-12 pr-12 py-2 dark:text-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#FD366E] focus:border-[#FD366E]/50 transition-all duration-200"
+                  className="w-full dark:bg-[#000000] bg-white dark:border-gray-800 border-gray-200 border rounded-xl pl-12 pr-12 py-2 dark:text-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#FF6500] focus:border-[#FF6500]/50 transition-all duration-200"
                 />
 
                 {searchTerm && (
                   <button
                     onClick={() => setSearchTerm("")}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-[#FD366E] transition-colors duration-200 w-5 h-5 flex items-center justify-center"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-[#FF6500] transition-colors duration-200 w-5 h-5 flex items-center justify-center"
                   >
                     <X className="w-5 h-5" />
                   </button>
@@ -992,7 +992,7 @@ export function Home({ navigate }) {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                <Filter className="w-4 h-4 group-hover:text-[#FD366E] transition-colors" />
+                <Filter className="w-4 h-4 group-hover:text-[#FF6500] transition-colors" />
                 <span className="font-medium">Filters</span>
                 {!showFilters &&
                   (() => {
@@ -1005,7 +1005,7 @@ export function Home({ navigate }) {
                       <motion.span
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        className="bg-[#FD366E] text-white text-xs font-medium rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1.5 ml-1"
+                        className="bg-[#FF6500] text-white text-xs font-medium rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1.5 ml-1"
                       >
                         {activeFiltersCount}
                       </motion.span>
@@ -1042,7 +1042,7 @@ export function Home({ navigate }) {
                         <select
                           value={filterCategory}
                           onChange={(e) => setFilterCategory(e.target.value)}
-                          className="w-full dark:bg-gray-800/50 bg-gray-100 dark:border-gray-700 border-gray-300 rounded-lg px-3 py-2 dark:text-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#FD366E] focus:border-[#FD366E]/50 transition-all duration-200"
+                          className="w-full dark:bg-gray-800/50 bg-gray-100 dark:border-gray-700 border-gray-300 rounded-lg px-3 py-2 dark:text-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#FF6500] focus:border-[#FF6500]/50 transition-all duration-200"
                         >
                           <option
                             value="All"
@@ -1073,7 +1073,7 @@ export function Home({ navigate }) {
                         <select
                           value={filterPriority}
                           onChange={(e) => setFilterPriority(e.target.value)}
-                          className="w-full dark:bg-gray-800/50 bg-gray-100 dark:border-gray-700 border-gray-300 rounded-lg px-3 py-2 dark:text-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#FD366E] focus:border-[#FD366E]/50 transition-all duration-200"
+                          className="w-full dark:bg-gray-800/50 bg-gray-100 dark:border-gray-700 border-gray-300 rounded-lg px-3 py-2 dark:text-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#FF6500] focus:border-[#FF6500]/50 transition-all duration-200"
                         >
                           <option
                             value="All"
@@ -1104,7 +1104,7 @@ export function Home({ navigate }) {
                         <select
                           value={filterStatus}
                           onChange={(e) => setFilterStatus(e.target.value)}
-                          className="w-full dark:bg-gray-800/50 bg-gray-100 dark:border-gray-700 border-gray-300 rounded-lg px-3 py-2 dark:text-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#FD366E] focus:border-[#FD366E]/50 transition-all duration-200"
+                          className="w-full dark:bg-gray-800/50 bg-gray-100 dark:border-gray-700 border-gray-300 rounded-lg px-3 py-2 dark:text-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#FF6500] focus:border-[#FF6500]/50 transition-all duration-200"
                         >
                           {STATUSES.map((status) => (
                             <option
@@ -1131,7 +1131,7 @@ export function Home({ navigate }) {
                           placeholder="Filter by tags..."
                           value={filterTags}
                           onChange={(e) => setFilterTags(e.target.value)}
-                          className="w-full dark:bg-gray-800/50 bg-gray-100 dark:border-gray-700 border-gray-300 rounded-lg px-3 py-[7px] dark:text-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#FD366E] focus:border-[#FD366E]/50 transition-all duration-200"
+                          className="w-full dark:bg-gray-800/50 bg-gray-100 dark:border-gray-700 border-gray-300 rounded-lg px-3 py-[7px] dark:text-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#FF6500] focus:border-[#FF6500]/50 transition-all duration-200"
                         />
                       </motion.div>
                     </div>
@@ -1594,7 +1594,7 @@ export function Home({ navigate }) {
                       <motion.button
                         onClick={() => ideas.loadMore()}
                         disabled={ideas.isLoading}
-                        className="bg-[#FD366E] hover:bg-[#FD366E]/90 disabled:bg-[#FD366E]/50 text-white font-medium px-6 py-2 rounded-xl transition-all duration-300 shadow-lg shadow-[#FD366E]/20 flex items-center space-x-2"
+                        className="bg-gradient-to-r from-[#C40C0C] via-[#FF6500] to-[#CC561E] hover:brightness-110 disabled:opacity-60 text-white font-medium px-6 py-2 rounded-xl transition-all duration-300 shadow-lg shadow-[#FF6500]/30 flex items-center space-x-2"
                         whileHover={
                           !ideas.isLoading ? { scale: 1.02, y: -1 } : {}
                         }

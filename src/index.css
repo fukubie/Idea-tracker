@@ -1,6 +1,6 @@
 /* Global text selection style */
 ::selection {
-  background-color: #fd366e;
+  background-color: #ff6500;
   /* pink/red background */
   color: #ffffff;
   /* white text on selection */
@@ -8,7 +8,7 @@
 
 /* For Firefox specifically */
 ::-moz-selection {
-  background-color: #fd366e;
+  background-color: #ff6500;
   color: #ffffff;
 }
 
@@ -93,8 +93,8 @@ body {
 }
 
 .language-switcher-container .themed-language-switcher:focus {
-  border-color: #fd366e;
-  box-shadow: 0 0 0 2px rgba(253, 54, 110, 0.1);
+  border-color: #ff6500;
+  box-shadow: 0 0 0 2px rgba(255, 101, 0, 0.1);
 }
 
 /* Language Switcher Dark Theme Styles */
@@ -111,13 +111,13 @@ body {
 }
 
 .dark .language-switcher-container .themed-language-switcher:focus {
-  border-color: #fd366e;
-  box-shadow: 0 0 0 2px rgba(253, 54, 110, 0.2);
+  border-color: #ff6500;
+  box-shadow: 0 0 0 2px rgba(255, 101, 0, 0.2);
 }
 
 /* Dropdown styles for both themes */
 .language-switcher-container .themed-language-switcher[aria-expanded="true"] {
-  border-color: #fd366e;
+  border-color: #ff6500;
 }
 
 /* Light theme dropdown */
@@ -159,11 +159,11 @@ body {
 
 /* Selected state for both themes */
 .language-switcher-container .themed-language-switcher+div button[aria-current="true"] {
-  color: #fd366e;
+  color: #ff6500;
   font-weight: 600;
 }
 
 .dark .language-switcher-container .themed-language-switcher+div button[aria-current="true"] {
-  color: #fd366e;
+  color: #ff6500;
   font-weight: 600;
 }

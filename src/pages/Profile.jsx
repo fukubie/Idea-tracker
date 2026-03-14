@@ -64,7 +64,7 @@ export function Profile({ navigate }) {
     return (
       <div className="max-w-2xl mx-auto p-4 flex items-center justify-center min-h-[200px]">
         <div className="text-center">
-          <div className="w-8 h-8 border-2 border-[#FD366E] border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
+          <div className="w-8 h-8 border-2 border-[#FF6500] border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
           <p className="text-gray-600 dark:text-gray-400">Loading profile...</p>
         </div>
       </div>
@@ -102,14 +102,14 @@ export function Profile({ navigate }) {
     <div className="max-w-2xl mx-auto p-4 space-y-6">
       <div className="grid grid-cols-1 gap-6">
         <motion.div
-          className="bg-gradient-to-br from-white to-gray-50 dark:from-[#000000] dark:to-[#111111] rounded-2xl p-6 border border-gray-200 dark:border-gray-800 shadow-lg"
+          className="bg-gradient-to-br from-[#FFF4E6] via-[#FFFAF3] to-[#FFF9EC] dark:from-[#000000] dark:to-[#111111] rounded-2xl p-6 border border-[#FF6500]/20 dark:border-gray-800 shadow-lg"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
           <div className="flex flex-col md:flex-row gap-6 items-start sm:items-stretch">
             <div className="sm:w-28 flex-shrink-0">
-              <div className="w-28 h-28 md:h-full rounded-xl bg-[#FD366E] flex items-center justify-center shadow-lg relative overflow-hidden">
+              <div className="w-28 h-28 md:h-full rounded-xl bg-[#FF6500] flex items-center justify-center shadow-lg relative overflow-hidden">
                 {user.current?.prefs?.profilePictureId ? (
                   <div className="relative w-full h-full">
                     <img
@@ -128,7 +128,7 @@ export function Profile({ navigate }) {
                         if (fallback) fallback.style.display = "flex";
                       }}
                     />
-                    <div className="w-full h-full bg-[#FD366E] flex items-center justify-center text-white font-medium text-2xl md:text-3xl lg:text-4xl absolute inset-0">
+                    <div className="w-full h-full bg-[#FF6500] flex items-center justify-center text-white font-medium text-2xl md:text-3xl lg:text-4xl absolute inset-0">
                       {(() => {
                         let initials = "";
                         if (user.current?.name) {
@@ -185,8 +185,8 @@ export function Profile({ navigate }) {
                 <p className="text-gray-900 dark:text-white text-sm sm:text-md break-words">
                   {user.current.email}
                 </p>
-                <div className="flex items-center gap-2 bg-[#fd366e0a] border border-[#FD366E]/30 rounded-full px-3 py-1">
-                  <Zap className="w-4 h-4 text-[#FD366E]" />
+                <div className="flex items-center gap-2 bg-[#FF6500]/10 border border-[#FF6500]/30 rounded-full px-3 py-1">
+                  <Zap className="w-4 h-4 text-[#FF6500]" />
                   <span className="text-xs font-medium text-gray-900 dark:text-white">
                     {productivityScore}% Productive
                   </span>
@@ -194,9 +194,9 @@ export function Profile({ navigate }) {
               </div>
 
               <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-gray-50 dark:bg-[#0F0F0F] rounded-lg p-4 border border-[#FD366E]">
+                <div className="bg-[#FFFAF3] dark:bg-[#0F0F0F] rounded-lg p-4 border border-[#FF6500]">
                   <div className="flex items-center gap-2">
-                    <Calendar className="w-4 h-4 text-[#FD366E]" />
+                    <Calendar className="w-4 h-4 text-[#FF6500]" />
                     <span className="text-xs text-gray-600 dark:text-gray-300">
                       Member since
                     </span>
@@ -206,9 +206,9 @@ export function Profile({ navigate }) {
                   </p>
                 </div>
 
-                <div className="bg-gray-50 dark:bg-[#0F0F0F] rounded-lg p-4 border border-[#FD366E]">
+                <div className="bg-[#FFFAF3] dark:bg-[#0F0F0F] rounded-lg p-4 border border-[#FF6500]">
                   <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-[#FD366E]" />
+                    <CheckCircle2 className="w-4 h-4 text-[#FF6500]" />
                     <span className="text-xs text-gray-600 dark:text-gray-300">
                       Completion rate
                     </span>
@@ -229,9 +229,9 @@ export function Profile({ navigate }) {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
-          <div className="bg-white dark:bg-[#000000] border border-gray-200 dark:border-gray-800 rounded-xl p-4 flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-lg bg-[#fd366e0a] border border-[#FD366E]/20 flex items-center justify-center">
-              <Lightbulb className="w-5 h-5 text-[#FD366E]" />
+          <div className="bg-[#FFFAF3] dark:bg-[#000000] border border-[#FF6500]/20 dark:border-gray-800 rounded-xl p-4 flex items-center space-x-3">
+            <div className="w-10 h-10 rounded-lg bg-[#FF6500]/10 border border-[#FF6500]/30 flex items-center justify-center">
+              <Lightbulb className="w-5 h-5 text-[#FF6500]" />
             </div>
             <div>
               <p className="text-gray-600 dark:text-gray-400 text-xs">
@@ -243,7 +243,7 @@ export function Profile({ navigate }) {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-[#000000] border border-gray-200 dark:border-gray-800 rounded-xl p-4 flex items-center space-x-3">
+          <div className="bg-[#FFFAF3] dark:bg-[#000000] border border-gray-200 dark:border-gray-800 rounded-xl p-4 flex items-center space-x-3">
             <div className="w-10 h-10 rounded-lg bg-green-500/10 border border-green-500/20 flex items-center justify-center">
               <CheckCircle2 className="w-5 h-5 text-green-500" />
             </div>
@@ -257,9 +257,9 @@ export function Profile({ navigate }) {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-[#000000] border border-gray-200 dark:border-gray-800 rounded-xl p-4 flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-lg bg-[#fd366e0a] border border-[#FD366E]/20 flex items-center justify-center">
-              <Tag className="w-5 h-5 text-[#FD366E]" />
+          <div className="bg-[#FFFAF3] dark:bg-[#000000] border border-[#FF6500]/20 dark:border-gray-800 rounded-xl p-4 flex items-center space-x-3">
+            <div className="w-10 h-10 rounded-lg bg-[#FF6500]/10 border border-[#FF6500]/30 flex items-center justify-center">
+              <Tag className="w-5 h-5 text-[#FF6500]" />
             </div>
             <div>
               <p className="text-gray-600 dark:text-gray-400 text-xs">
@@ -271,9 +271,9 @@ export function Profile({ navigate }) {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-[#000000] border border-gray-200 dark:border-gray-800 rounded-xl p-4 flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-lg bg-[#fd366e0a] border border-[#FD366E]/20 flex items-center justify-center">
-              <Clock className="w-5 h-5 text-[#FD366E]" />
+          <div className="bg-[#FFFAF3] dark:bg-[#000000] border border-[#FF6500]/20 dark:border-gray-800 rounded-xl p-4 flex items-center space-x-3">
+            <div className="w-10 h-10 rounded-lg bg-[#FF6500]/10 border border-[#FF6500]/30 flex items-center justify-center">
+              <Clock className="w-5 h-5 text-[#FF6500]" />
             </div>
             <div>
               <p className="text-gray-600 dark:text-gray-400 text-xs">
@@ -303,15 +303,15 @@ export function Profile({ navigate }) {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.3 }}
         >
-          <div className="bg-white dark:bg-[#000000] border border-gray-200 dark:border-gray-800 rounded-2xl p-5">
+          <div className="bg-[#FFFAF3] dark:bg-[#000000] border border-gray-200 dark:border-gray-800 rounded-2xl p-5">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-medium text-gray-900 dark:text-white flex items-center">
-                <PieChart className="w-5 h-5 mr-2 text-[#FD366E]" />
+                <PieChart className="w-5 h-5 mr-2 text-[#FF6500]" />
                 Categories
               </h3>
               {topCategory && (
-                <div className="flex items-center space-x-1 bg-gray-50 dark:bg-[#0F0F0F] rounded-full px-2 py-1">
-                  <Trophy className="w-3 h-3 text-[#FD366E]" />
+                <div className="flex items-center space-x-1 bg-[#FFFAF3] dark:bg-[#0F0F0F] rounded-full px-2 py-1">
+                  <Trophy className="w-3 h-3 text-[#FF6500]" />
                   <span className="text-xs text-gray-900 dark:text-white">
                     {topCategory[0]}
                   </span>
@@ -339,7 +339,7 @@ export function Profile({ navigate }) {
                         </div>
                         <div className="w-full bg-gray-200 dark:bg-gray-800 rounded-full h-1.5">
                           <motion.div
-                            className="bg-gradient-to-r from-[#FD366E] to-[#FE6B49] h-1.5 rounded-full"
+                            className="bg-gradient-to-r from-[#C40C0C] via-[#FF6500] to-[#F6CE71] h-1.5 rounded-full"
                             initial={{ width: 0 }}
                             animate={{ width: `${percentage}%` }}
                             transition={{ duration: 1, delay: 0.5 }}
@@ -359,9 +359,9 @@ export function Profile({ navigate }) {
             )}
           </div>
 
-          <div className="bg-white dark:bg-[#000000] border border-gray-200 dark:border-gray-800 rounded-2xl p-5">
+          <div className="bg-[#FFFAF3] dark:bg-[#000000] border border-gray-200 dark:border-gray-800 rounded-2xl p-5">
             <h3 className="text-lg font-medium text-gray-900 dark:text-white flex items-center mb-4">
-              <Clock className="w-5 h-5 mr-2 text-[#FD366E]" />
+              <Clock className="w-5 h-5 mr-2 text-[#FF6500]" />
               Recent Ideas
             </h3>
 
@@ -399,7 +399,7 @@ export function Profile({ navigate }) {
                       <span className="text-xs text-gray-600 dark:text-gray-400 shrink-0">
                         {moment(idea.$createdAt).format("MMM D, YYYY")}
                       </span>
-                      <span className="text-xs bg-[#fd366e0a] border border-[#FD366E]/20 text-[#FD366E] px-2 py-0.5 rounded break-words break-all min-w-0">
+                      <span className="text-xs bg-[#FF6500]/10 border border-[#FF6500]/30 text-[#FF6500] px-2 py-0.5 rounded break-words break-all min-w-0">
                         {idea.category || "Web App"}
                       </span>
                     </div>
@@ -407,7 +407,7 @@ export function Profile({ navigate }) {
                 ))}
                 <motion.button
                   onClick={() => navigate("home")}
-                  className="w-full mt-2 text-sm text-[#FD366E] hover:text-[#FD366E]/80 transition-colors flex items-center justify-center space-x-1"
+                  className="w-full mt-2 text-sm text-[#FF6500] hover:text-[#CC561E] transition-colors flex items-center justify-center space-x-1"
                   whileHover={{ scale: 1.02 }}
                 >
                   <span>View all ideas</span>
@@ -422,7 +422,7 @@ export function Profile({ navigate }) {
                 </p>
                 <motion.button
                   onClick={() => navigate("home")}
-                  className="text-sm bg-[#FD366E] hover:bg-[#FD366E]/90 text-white px-2 py-1.5 rounded-lg"
+                  className="text-sm bg-[#FF6500] hover:bg-[#CC561E] text-white px-2 py-1.5 rounded-lg"
                   whileHover={{ scale: 1.05 }}
                 >
                   Create your first idea

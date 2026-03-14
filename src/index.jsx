@@ -42,7 +42,7 @@ class RootErrorBoundary extends Component {
             style={{
               padding: "8px 16px",
               cursor: "pointer",
-              background: "#FD366E",
+              background: "#FF6500",
               color: "white",
               border: "none",
               borderRadius: 8,

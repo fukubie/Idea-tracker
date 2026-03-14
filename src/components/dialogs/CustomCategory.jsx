@@ -60,7 +60,7 @@ export function CustomCategory({
               onChange={(e) => setNewCategory(e.target.value)}
               placeholder="Enter category name..."
               maxLength={50}
-              className="w-full text-sm px-3 py-2 dark:bg-gray-800/50 bg-gray-50 border-[0.5px] dark:border-gray-700 border-gray-200 rounded-lg dark:text-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#FD366E] mb-4"
+              className="w-full text-sm px-3 py-2 dark:bg-gray-800/50 bg-gray-50 border-[0.5px] dark:border-gray-700 border-gray-200 rounded-lg dark:text-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#FF6500] mb-4"
               autoFocus
               required
             />
@@ -75,7 +75,7 @@ export function CustomCategory({
               </button>
               <button
                 type="submit"
-                className="flex-1 bg-[#FD366E] hover:bg-[#FD366E]/90 text-white py-2 px-4 rounded-xl transition-colors"
+              className="flex-1 bg-[#FF6500] hover:bg-[#FF6500]/90 text-white py-2 px-4 rounded-xl transition-colors"
               >
                 Add & Select
               </button>

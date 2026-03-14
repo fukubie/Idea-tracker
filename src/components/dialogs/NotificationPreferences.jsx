@@ -246,8 +246,8 @@ const NotificationPreferences = ({ isOpen, onClose }) => {
           </button>
 
           <div className="text-center mb-6">
-            <div className="w-12 h-12 bg-[#FD366E]/10 rounded-full flex items-center justify-center mx-auto mb-3">
-              <Bell className="w-6 h-6 text-[#FD366E]" />
+          <div className="w-12 h-12 bg-[#FF6500]/10 rounded-full flex items-center justify-center mx-auto mb-3">
+            <Bell className="w-6 h-6 text-[#FF6500]" />
             </div>
             <h2 className="text-xl font-medium text-gray-900 dark:text-white mb-2">
               Notifications
@@ -259,7 +259,7 @@ const NotificationPreferences = ({ isOpen, onClose }) => {
 
           {isLoading ? (
             <div className="flex justify-center py-8">
-              <div className="w-6 h-6 border-2 border-[#FD366E]/30 border-t-[#FD366E] rounded-full animate-spin" />
+              <div className="w-6 h-6 border-2 border-[#FF6500]/30 border-t-[#FF6500] rounded-full animate-spin" />
             </div>
           ) : (
             <>
@@ -270,7 +270,7 @@ const NotificationPreferences = ({ isOpen, onClose }) => {
                       key={key}
                       className={`flex items-center justify-between p-4 rounded-xl transition-colors ${
                         primary
-                          ? "bg-[#FD366E]/5 border border-[#FD366E]/20"
+                          ? "bg-[#FF6500]/5 border border-[#FF6500]/20"
                           : disabled
                             ? "bg-gray-50 dark:bg-gray-800/20 opacity-60"
                             : "bg-[#f4f4f7] dark:bg-gray-800/30"
@@ -278,7 +278,7 @@ const NotificationPreferences = ({ isOpen, onClose }) => {
                     >
                       <div className="flex items-start space-x-3">
                         {primary && (
-                          <AlertCircle className="w-4 h-4 text-[#FD366E] mt-0.5 flex-shrink-0" />
+                          <AlertCircle className="w-4 h-4 text-[#FF6500] mt-0.5 flex-shrink-0" />
                         )}
                         <div className="flex-1 min-w-0">
                           <h4
@@ -306,7 +306,7 @@ const NotificationPreferences = ({ isOpen, onClose }) => {
                         disabled={isSaving || disabled}
                         className={`relative ml-3 inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 ${
                           preferences[key] && !disabled
-                            ? "bg-[#FD366E]"
+                            ? "bg-[#FF6500]"
                             : "bg-gray-300 dark:bg-gray-600"
                         } ${isSaving || disabled ? "opacity-50" : "cursor-pointer"}`}
                         aria-pressed={preferences[key]}
@@ -318,7 +318,7 @@ const NotificationPreferences = ({ isOpen, onClose }) => {
                           }`}
                         >
                           {preferences[key] && (
-                            <Check className="w-3 h-3 text-[#FD366E] absolute inset-0 m-auto" />
+                            <Check className="w-3 h-3 text-[#FF6500] absolute inset-0 m-auto" />
                           )}
                         </span>
                       </button>
@@ -346,7 +346,7 @@ const NotificationPreferences = ({ isOpen, onClose }) => {
                 <motion.button
                   onClick={handleSave}
                   disabled={isSaving || !hasChanges}
-                  className="flex-1 bg-[#FD366E] hover:bg-[#FD366E]/90 text-white font-medium py-2 rounded-lg transition-colors disabled:opacity-50 flex items-center justify-center"
+                  className="flex-1 bg-[#FF6500] hover:bg-[#FF6500]/90 text-white font-medium py-2 rounded-lg transition-colors disabled:opacity-50 flex items-center justify-center"
                   whileHover={{ scale: isSaving || !hasChanges ? 1 : 1.02 }}
                   whileTap={{ scale: isSaving || !hasChanges ? 1 : 0.98 }}
                 >

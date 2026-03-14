@@ -137,7 +137,7 @@ export function Login({ navigate }) {
                   onChange={handleEmailChange}
                   onBlur={() => setEmailError(validateEmail(email))}
                   autoComplete="off"
-                  className={`w-full bg-transparent border rounded-lg pl-10 pr-4 py-2 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#FD366E] focus:border-transparent transition-all ${
+                  className={`w-full bg-transparent border rounded-lg pl-10 pr-4 py-2 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#FF6500] focus:border-transparent transition-all ${
                     emailError
                       ? "border-red-500"
                       : "border-gray-300 dark:border-gray-700"
@@ -167,7 +167,7 @@ export function Login({ navigate }) {
                   onChange={handlePasswordChange}
                   onBlur={() => setPasswordError(validatePassword(password))}
                   autoComplete="off"
-                  className={`w-full bg-transparent border rounded-lg pl-10 pr-12 py-2 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#FD366E] focus:border-transparent transition-all ${
+                  className={`w-full bg-transparent border rounded-lg pl-10 pr-12 py-2 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#FF6500] focus:border-transparent transition-all ${
                     passwordError
                       ? "border-red-500"
                       : "border-gray-300 dark:border-gray-700"
@@ -207,7 +207,7 @@ export function Login({ navigate }) {
                   emailError ||
                   passwordError
                 }
-                className="bg-[#FD366E] hover:bg-[#FD366E]/80 disabled:bg-gray-400 dark:disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-medium py-2 rounded-lg transition-all flex items-center justify-center order-2 sm:order-1"
+                className="bg-[#FF6500] hover:bg-[#FF6500]/80 disabled:bg-gray-400 dark:disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-medium py-2 rounded-lg transition-all flex items-center justify-center order-2 sm:order-1"
                 whileHover={!isLoading ? { scale: 1.02 } : {}}
                 whileTap={!isLoading ? { scale: 0.98 } : {}}
               >
@@ -252,7 +252,7 @@ export function Login({ navigate }) {
                 "Real-time updates",
               ].map((feature, i) => (
                 <div key={i} className="flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-[#FD366E] rounded-full"></div>
+                    <div className="w-2 h-2 bg-[#FF6500] rounded-full"></div>
                   <span>{feature}</span>
                 </div>
               ))}

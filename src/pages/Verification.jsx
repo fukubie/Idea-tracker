@@ -26,7 +26,7 @@ export function VerificationPage() {
         transition={{ duration: 0.5 }}
       >
         <div className="text-center">
-          <div className="w-6 h-6 border-2 border-[#FD366E]/30 border-t-[#FD366E] rounded-full animate-spin mb-3 mx-auto"></div>
+            <div className="w-6 h-6 border-2 border-[#FF6500]/30 border-t-[#FF6500] rounded-full animate-spin mb-3 mx-auto"></div>
           <p className="text-gray-600 dark:text-gray-400">Loading...</p>
         </div>
       </motion.div>
@@ -41,7 +41,7 @@ export function VerificationPage() {
       transition={{ duration: 0.5 }}
     >
       <div className="w-full max-w-sm mx-auto bg-white dark:bg-[#000000] rounded-2xl p-8 border border-gray-200 dark:border-gray-800 shadow-lg dark:shadow-none text-center">
-        <Mail className="w-12 h-12 text-[#FD366E] mx-auto mb-4" />
+        <Mail className="w-12 h-12 text-[#FF6500] mx-auto mb-4" />
         <h1 className="text-2xl font-medium text-gray-900 dark:text-white mb-2">
           Verify Your Email
         </h1>
@@ -52,7 +52,7 @@ export function VerificationPage() {
         <motion.button
           onClick={handleResend}
           disabled={isSending}
-          className="bg-[#FD366E] hover:bg-[#FD366E]/90 disabled:bg-[#FD366E]/50 text-white font-medium py-1 px-4 rounded-lg transition-all w-full mb-4 flex items-center justify-center space-x-2"
+          className="bg-[#FF6500] hover:bg-[#FF6500]/90 disabled:bg-[#FF6500]/50 text-white font-medium py-1 px-4 rounded-lg transition-all w-full mb-4 flex items-center justify-center space-x-2"
           whileHover={!isSending ? { scale: 1.02 } : {}}
           whileTap={!isSending ? { scale: 0.98 } : {}}
         >

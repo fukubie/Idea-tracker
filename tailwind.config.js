@@ -5,8 +5,16 @@ module.exports = {
   theme: {
     extend: {
       backgroundColor: {
-        "theme-light": "#f4f4f7",
-        "theme-dark": "#000000",
+        "theme-light": "#F6CE71",
+        "theme-dark": "#C40C0C",
+      },
+      colors: {
+        brand: {
+          primary: "#FF6500",
+          deep: "#C40C0C",
+          soft: "#CC561E",
+          highlight: "#F6CE71",
+        },
       },
       fontFamily: {
         sans: ["Poppins", "sans-serif"],

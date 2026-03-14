@@ -41,7 +41,7 @@ export function NotFound({ navigate }) {
           }}
           className="mb-4"
         >
-          <h1 className="text-8xl md:text-9xl font-semibold text-[#FD366E] mb-2">
+          <h1 className="text-8xl md:text-9xl font-semibold text-[#FF6500] mb-2">
             404
           </h1>
         </motion.div>
@@ -63,7 +63,7 @@ export function NotFound({ navigate }) {
             onClick={() => navigate?.("home") || (window.location.href = "/")}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="bg-[#FD366E] hover:bg-[#e02d5e] text-white px-6 py-2 rounded-xl font-medium flex items-center justify-center space-x-2 transition-colors duration-200"
+            className="bg-[#FF6500] hover:bg-[#CC561E] text-white px-6 py-2 rounded-xl font-medium flex items-center justify-center space-x-2 transition-colors duration-200"
           >
             <Home size={18} />
             <span>Home</span>

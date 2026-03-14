@@ -52,7 +52,7 @@ const ThemeSelector = ({ variant = "dropdown" }) => {
               onClick={() => handleThemeChange(id)}
               className={`flex items-center justify-center p-1.5 rounded-md transition-all duration-200 ${
                 theme === id
-                  ? "bg-[#FD366E] text-white shadow-md ring-2 ring-[#FD366E]/20"
+                  ? "bg-[#FF6500] text-white shadow-md ring-2 ring-[#FF6500]/20"
                   : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800/60"
               }`}
               whileHover={{ scale: 1.05 }}
@@ -105,7 +105,7 @@ const ThemeSelector = ({ variant = "dropdown" }) => {
                 }}
                 className={`w-full flex items-center gap-2 px-3 py-2 text-sm ${
                   theme === id
-                    ? "bg-[#FD366E]/10 text-[#FD366E] dark:text-[#FD366E]"
+                    ? "bg-[#FF6500]/10 text-[#FF6500] dark:text-[#FF6500]"
                     : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-900"
                 }`}
                 whileHover={{ scale: 1.02 }}
@@ -130,7 +130,7 @@ const ThemeSelector = ({ variant = "dropdown" }) => {
           onClick={() => handleThemeChange(id)}
           className={`flex items-center justify-center p-1.5 rounded-md transition-all duration-200 ${
             theme === id
-              ? "bg-[#FD366E] text-white shadow-md"
+              ? "bg-[#FF6500] text-white shadow-md"
               : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-white/80 dark:hover:bg-gray-700/80"
           }`}
           whileHover={{ scale: 1.05 }}
