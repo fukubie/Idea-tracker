@@ -1,8 +1,8 @@
 /**
- * Appwrite Function: AI pitch using Gemini.
+ * Appwrite Function: AI idea expansion using Gemini.
  * In Appwrite: Functions → Create function → Node.js → paste this code.
  * Add secret: GEMINI_API_KEY. Deploy, then copy the function ID into your
- * Site env as VITE_APPWRITE_PITCH_FUNCTION_ID.
+ * app .env as VITE_APPWRITE_FUNCTION_ID.
  *
  * Note: Use req.bodyText or req.bodyJson for execution payload (req.body can be empty on Cloud).
  */
@@ -24,7 +24,7 @@ export default async ({ req, res }) => {
       );
     }
 
-    const { title, description, targetAudience, goal } = body;
+    const { title, description, category, priority } = body;
 
     if (!title || !description) {
       return res.json(
@@ -41,11 +41,13 @@ export default async ({ req, res }) => {
       );
     }
 
-    const prompt = `You are an expert startup storyteller. Create a short pitch for this idea (hook, problem/solution, call-to-action). Use markdown.
+    const prompt = `Expand this idea into a short plan (2–4 paragraphs). Keep it practical and actionable.
 Title: ${title}
 Description: ${description}
-Target: ${targetAudience || "general"}
-Goal: ${goal || "get interest"}`;
+Category: ${category || "General"}
+Priority: ${priority || "Medium"}
+
+Respond in markdown.`;
 
     const response = await fetch(
       "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent",
@@ -81,7 +83,7 @@ Goal: ${goal || "get interest"}`;
       );
     }
 
-    return res.json({ success: true, pitch: text });
+    return res.json({ success: true, expansion: text });
   } catch (e) {
     return res.json({ success: false, error: e.message }, 500);
   }

@@ -129,7 +129,7 @@ const AccountSettings = ({ isOpen, onClose }) => {
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
           transition={{ duration: 0.2 }}
-          className="bg-white dark:bg-[#000000] dark:border-gray-800 border-gray-200 border rounded-2xl p-6 w-full max-w-sm relative"
+          className="bg-white dark:bg-[#000000] dark:border-gray-800 border-gray-200 border rounded-2xl p-6 w-full max-w-sm max-h-[90vh] overflow-y-auto relative"
           onClick={(e) => e.stopPropagation()}
         >
           <button

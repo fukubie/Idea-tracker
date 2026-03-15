@@ -158,7 +158,9 @@ VITE_APPWRITE_STORAGE_BUCKET_ID=your_storage_bucket_id_here
 
 ---
 
-## 7. Optional: AI expansion function (“Expand with AI”)
+## 7. Optional: AI (Gemini) for Expand and Pitch
+
+For **Expand with AI** and **Pitch generator**, the app calls two Appwrite Functions that use the Gemini API. Follow the dedicated guide: **[GEMINI_APPWRITE_SETUP.md](./GEMINI_APPWRITE_SETUP.md)**. It covers getting a Gemini API key, creating both functions in Appwrite, adding the `GEMINI_API_KEY` secret, and setting `VITE_APPWRITE_FUNCTION_ID` and `VITE_APPWRITE_PITCH_FUNCTION_ID` in `.env`.
 
 The “Expand with AI” feature calls an **Appwrite Function**. The app sends `{ title, description, category, priority }` and expects JSON back: `{ success: true, expansion: "..." }` or `{ success: false, error: "..." }`.
 
@@ -166,13 +168,19 @@ The “Expand with AI” feature calls an **Appwrite Function**. The app sends `
 
 1. In the sidebar: **Functions** → **Create function**.
 2. Name it (e.g. `idea-expand`), choose **Node.js** runtime, create it.
-3. Copy the function **ID** → put it in `.env` as `VITE_APPWRITE_FUNCTION_ID`.
-4. Use the code from **`appwrite-functions/idea-expand-gemini.js`** in this repo (paste into the function editor in Appwrite), or copy from the example below.
+3. Copy the **Function ID** (not the Deployment ID):
+   - Open the function → **Settings** (or the main function page). The **Function ID** is shown at the top (e.g. ``). Do **not** use the **Deployment ID** (shown under Deployments after you deploy).
+4. Put that Function ID in `.env` as `VITE_APPWRITE_FUNCTION_ID` (no quotes, no spaces).
+
+**Deploying the code (no in-console editor):** Appwrite Cloud does not have a “paste code” editor. You deploy by:
+- **Manual (tar.gz):** Deployments → Create deployment → Manual → upload a **.tar.gz** of the function (contents of `appwrite-functions/deploy-expand`, so the archive contains `src/main.js`). From repo root: `cd appwrite-functions/deploy-expand && tar -czf ../idea-expand.tar.gz .` then upload `idea-expand.tar.gz`.
+- **Git or CLI:** If tar.gz doesn’t work, see **[appwrite-functions/DEPLOY.md](appwrite-functions/DEPLOY.md)** for Git connection and CLI (`appwrite push functions`) steps.
 
 ### 7.2 Add your AI API key as a secret
 
-1. Open the function → **Settings** or **Variables**.
-2. Add a **secret**:
+1. Open the function → **Settings** → scroll to **Environment variables**.
+2. **Create variable** (or use “Create variable”): set **Key** to `GEMINI_API_KEY`, **Value** to your key from [Google AI Studio](https://aistudio.google.com/app/apikey). Save.
+3. You already have **GEMINI_API_KEY** listed; use **Edit** if you need to change it.
    - For **Gemini**: name `GEMINI_API_KEY`, value = your key from [Google AI Studio](https://aistudio.google.com/app/apikey).
    - For OpenAI: `OPENAI_API_KEY`; for Groq: `GROQ_API_KEY`.
 3. You’ll use this name inside the function code (e.g. `process.env.GEMINI_API_KEY`).
@@ -189,7 +197,13 @@ The function receives the request body as JSON and must return a string that is 
 ```javascript
 export default async ({ req, res }) => {
   try {
-    const body = JSON.parse(req.body ?? "{}");
+    // Use req.bodyText or req.bodyJson (req.body can be empty when invoked via Execution API)
+    let body = {};
+    try {
+      if (req.bodyJson != null && typeof req.bodyJson === "object") body = req.bodyJson;
+      else if (req.bodyText != null && req.bodyText !== "") body = JSON.parse(req.bodyText);
+      else if (req.body != null) body = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
+    } catch (e) { return res.json({ success: false, error: "Invalid body: " + e.message }, 400); }
     const { title, description, category, priority } = body;
 
     if (!title || !description) {

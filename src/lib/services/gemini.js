@@ -64,7 +64,9 @@ export async function expandIdea(title, description, category, priority) {
     const result = await callAppwriteFunction(EXPAND_FUNCTION_ID, payload);
 
     if (!result.success) {
-      throw new Error(result.error || "Expansion failed");
+      const msg = result.error || "Expansion failed";
+      console.error("Expand function returned error:", msg, result);
+      throw new Error(msg);
     }
 
     return {
@@ -73,9 +75,13 @@ export async function expandIdea(title, description, category, priority) {
     };
   } catch (error) {
     console.error("Expansion error:", error);
+    let message = error.message || "Expansion failed";
+    if (message.includes("could not be found")) {
+      message += " Use the Function ID from Appwrite (function Settings/Overview), not the Deployment ID. Check VITE_APPWRITE_FUNCTION_ID in .env.";
+    }
     return {
       success: false,
-      error: error.message || "Expansion failed",
+      error: message,
     };
   }
 }
@@ -108,9 +114,13 @@ export async function generatePitch(
     };
   } catch (error) {
     console.error("Pitch generation error:", error);
+    let message = error.message || "Pitch generation failed";
+    if (message.includes("could not be found")) {
+      message += " Use the Function ID from Appwrite (function Settings/Overview), not the Deployment ID. Check VITE_APPWRITE_PITCH_FUNCTION_ID in .env.";
+    }
     return {
       success: false,
-      error: error.message || "Pitch generation failed",
+      error: message,
     };
   }
 }

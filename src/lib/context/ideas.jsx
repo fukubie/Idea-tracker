@@ -617,7 +617,8 @@ export function IdeasProvider({ children }) {
       }
     } catch (err) {
       console.error("AI expansion error:", err);
-      toast.error("Failed to expand idea. Please try again.");
+      const message = err?.message || "Failed to expand idea. Please try again.";
+      toast.error(message);
       throw err;
     }
   }
