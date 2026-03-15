@@ -45,9 +45,9 @@ The Console only accepts **tar.gz** for manual upload. If that doesn’t work fo
 
 ### If you get "No source code found"
 
-- **Root directory** must point to a folder that **exists in your repo** and **contains the entrypoint file**. Use exactly:
-  - **Root directory**: `appwrite-functions` (no leading slash, no trailing slash).
-  - **Entrypoint**: `src/main.js`.
+- **Ensure `appwrite-functions/src/main.js` is committed and pushed** (see file in repo). Then try:
+  - **Setup A:** Root directory = `appwrite-functions`, Entrypoint = `src/main.js`.
+  - **Setup B (if A fails):** Root directory = *empty*, Entrypoint = `appwrite-functions/src/main.js`.
 - Ensure that folder is committed and pushed: e.g. `appwrite-functions/src/main.js` and `appwrite-functions/package.json` must exist on the production branch.
 - Avoid spaces or special characters in the root directory path.
 - After changing Git settings, trigger a new deployment (e.g. push an empty commit or use “Redeploy” if available).
