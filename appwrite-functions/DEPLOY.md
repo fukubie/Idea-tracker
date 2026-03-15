@@ -7,22 +7,22 @@ The Console only accepts **tar.gz** for manual upload. If that doesn’t work fo
 ## Option 1: Manual upload (tar.gz)
 
 1. **Create a tar.gz from the function folder**
-   - For **idea-expand**: open a terminal in the repo root, then:
+   - For **idea-expand**, the code lives in `appwrite-functions/` (with `src/main.js` and `package.json`). From the repo root:
      ```bash
-     cd appwrite-functions/deploy-expand
-     tar --exclude='*.tar.gz' -czf ../idea-expand.tar.gz .
+     cd appwrite-functions
+     tar --exclude='*.tar.gz' -czf idea-expand.tar.gz .
      ```
-   - You get `appwrite-functions/idea-expand.tar.gz`. The archive must contain `src/main.js` (so the **contents** of `deploy-expand` are at the root of the archive, not the folder itself).
+   - You get `appwrite-functions/idea-expand.tar.gz`. The archive must contain `src/main.js` and `package.json` at the top level.
 
 2. **In Appwrite Console**
    - Functions → **idea-expand** → **Deployments** → **Create deployment**.
    - Choose **Manual** (or “Upload”).
    - Upload **idea-expand.tar.gz**.
-   - **Entrypoint**: `src/main.js` (must match your function’s Settings).
+   - **Entrypoint**: `src/main.js`.
    - Activate the deployment after build.
 
 3. **For idea-pitch**
-   - Use a folder that has `src/main.js` with the contents of `idea-pitch-gemini.js`, then run the same `tar` command from that folder and upload the resulting `.tar.gz`.
+   - Create `appwrite-functions/src/main.js` with the contents of `idea-pitch-gemini.js` (or a separate folder), then run the same `tar` from that folder and upload the resulting `.tar.gz`.
 
 ---
 
@@ -30,17 +30,27 @@ The Console only accepts **tar.gz** for manual upload. If that doesn’t work fo
 
 1. **Connect the repo**
    - Functions → **idea-expand** → **Settings** → **Git repository** (or **Configuration** → **Git settings**) → **Connect Git repository**.
-   - Authorize and select your repo (e.g. the one containing this Idea-tracker project).
+   - Authorize and select your repo (the one containing this Idea-tracker project).
    - Set **Production branch** (e.g. `main`).
-   - **Root directory**: path to the folder that contains `src/main.js`:
-     - For this repo: `appwrite-functions/deploy-expand`  
-     (so Appwrite uses `appwrite-functions/deploy-expand/src/main.js` as the code).
 
-2. **Entrypoint**
-   - In the function’s runtime/configuration, **Entrypoint** should be `src/main.js` (relative to the root directory).
+2. **Root directory and entrypoint (must match the repo)**
+   - **Root directory**: `appwrite-functions`  
+     (The repo has `appwrite-functions/src/main.js` and `appwrite-functions/package.json`. Appwrite copies everything inside this folder; the path is relative to the repo root.)
+   - **Entrypoint**: `src/main.js`  
+     (relative to the root directory, so the full path is `appwrite-functions/src/main.js`.)
+   - Save the Git configuration.
 
 3. **Deploy**
-   - Push a commit to the production branch. Appwrite will build and deploy automatically.
+   - Commit and push the `appwrite-functions/` folder (including `src/main.js`) to the production branch. Appwrite will build and deploy on push.
+
+### If you get "No source code found"
+
+- **Root directory** must point to a folder that **exists in your repo** and **contains the entrypoint file**. Use exactly:
+  - **Root directory**: `appwrite-functions` (no leading slash, no trailing slash).
+  - **Entrypoint**: `src/main.js`.
+- Ensure that folder is committed and pushed: e.g. `appwrite-functions/src/main.js` and `appwrite-functions/package.json` must exist on the production branch.
+- Avoid spaces or special characters in the root directory path.
+- After changing Git settings, trigger a new deployment (e.g. push an empty commit or use “Redeploy” if available).
 
 ---
 
@@ -79,7 +89,7 @@ The Console only accepts **tar.gz** for manual upload. If that doesn’t work fo
 | Method   | Format / requirement |
 |----------|-----------------------|
 | Manual   | **tar.gz** (contents of folder at archive root; entrypoint e.g. `src/main.js`) |
-| Git      | Connect repo, set **Root directory** to `appwrite-functions/deploy-expand`, push to production branch |
-| CLI      | `appwrite init` + `appwrite pull functions`, set **path** to `appwrite-functions/deploy-expand`, then `appwrite push functions` |
+| Git      | Connect repo, **Root directory** = `appwrite-functions`, **Entrypoint** = `src/main.js`, push to production branch |
+| CLI      | `appwrite init` + `appwrite pull functions`, set **path** to `appwrite-functions`, **entrypoint** `src/main.js`, then `appwrite push functions` |
 
 If **tar.gz upload fails** (browser, size, or format), use **Git** or **CLI**; both deploy the same code without using the manual upload.
