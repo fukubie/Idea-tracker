@@ -1,162 +1,52 @@
-[![Deploy to Appwrite](https://img.shields.io/badge/Deploy%20to-Appwrite-f02e65?style=for-the-badge&logo=appwrite&logoColor=f02e65&labelColor=1d1d1d)](https://cloud.appwrite.io/console)
+## 🪴 Idea Tracker
 
-# 🪴 Introducing Idea Tracker
+**A focused idea management app with AI assistance, built with React, Vite, Tailwind CSS, Appwrite, and Lingo.dev.**
 
-**Professional idea management for developers.**
-
-Idea Tracker is a clean and efficient tool for managing your ideas with ease. Built for developers who value simplicity, privacy, and speed.
-
-<img width="1200" height="630" alt="og-image" src="./public/og-image.png" />
-
-## 🏆 Featured by Appwrite
-
-_Honored to be featured in Appwrite's Monthly Community Recognition for July 2025._
-[Read the official blog post →](https://appwrite.io/blog/post/product-update-july-2025)
-
-<img width="400" alt="appwrite-feature" src="https://github.com/user-attachments/assets/b2b49e8f-3e3c-4e86-bd24-9b0ebb809210" />
-
-## 📖 Project Journey
-
-Curious how Idea Tracker came to life? Explore the full development journey from concept to recognition:
-[**My Idea Tracker Journey with Appwrite: From Hello World to Hoodie →**](https://dev.to/abhivarde/my-idea-tracker-journey-with-appwrite-from-hello-world-to-hoodie-4p6e)
+Capture ideas, organize them by category and priority, expand them with AI, and manage everything behind secure authentication with a clean, animated UI and multilingual support.
 
 ## 🚀 Tech Stack
 
-- **Build Tool:** Vite
-- **Frontend:** React, Tailwind CSS
-- **Animation:** Framer Motion
-- **Internationalization:** Lingo.dev
-- **Backend:** Appwrite (NoSQL)
-- **Deployment:** Appwrite Sites
+- **Frontend**: React, Vite, Tailwind CSS, Framer Motion
+- **Backend services**: Appwrite (auth, database, storage)
+- **AI**: Gemini via server-side proxy / Appwrite Functions
+- **Internationalization**: Lingo.dev
 
-## 🌐 Production Deployment (Render + Appwrite)
+## 📦 Getting Started
 
-This project can also be deployed as a **Node service on Render** using Appwrite as the backend:
-
-- **Build command (Render Web Service):**
-  - `npm install && npm run build`
-- **Start command (Render Web Service):**
-  - `npm start` (runs `server.js`, which serves the built app from the `build` folder with SPA routing)
-
-Configure the following **environment variables in Render** (same values as your local `.env`):
-
-- `VITE_APPWRITE_ENDPOINT`
-- `VITE_APPWRITE_PROJECT_ID`
-- `VITE_APPWRITE_DATABASE_ID`
-- `VITE_APPWRITE_COLLECTION_ID`
-- `VITE_APPWRITE_STORAGE_BUCKET_ID`
-- `VITE_APPWRITE_FUNCTION_ID` (AI expansion – Appwrite Function ID)
-- `VITE_APPWRITE_PITCH_FUNCTION_ID` (AI pitch – Appwrite Function ID)
-- `VITE_SKIP_EMAIL_VERIFICATION` (optional)
-- Social login client IDs/secrets if you use them:
-  - `VITE_GOOGLE_CLIENT_ID`, `VITE_GOOGLE_CLIENT_SECRET`
-  - `VITE_GITHUB_CLIENT_ID`, `VITE_GITHUB_CLIENT_SECRET`
-  - `VITE_DISCORD_CLIENT_ID`, `VITE_DISCORD_CLIENT_SECRET`
-
-> **Important:** AI provider secrets like `GEMINI_API_KEY` **must be stored only in Appwrite Function secrets**, not in Render. The frontend calls Appwrite Functions, and those functions call Gemini using the secret.
-
-## ✨ Features
-
-### Core Features
-
-- 🔐 **Secure Authentication** – Session management for user security
-- 📝 **Full CRUD** – Create, read, update, delete ideas
-- 🛡️ **Privacy-First** – Users can only manage their own ideas
-- ⚡ **Real-Time Sync** – Across all devices
-
-### Extended Features
-
-- 🍀 **Organized by Category & Priority**
-- 🪴 **Edit Anytime** – Flexible idea updates
-- 🥬 **Color-Coded Tags** – Visual organization
-- 🥒 **Smart Search & Filtering**
-- 🌱 **Personal Dashboard**
-- 🧩 **Smooth UI & Animations**
-- 🥦 **Social Login** – Google, GitHub, Discord
-- 🌾 **Delete Account Functionality**
-- 🫛 **Upload Profile Picture**
-- 🫒 **Dark / Light / System Theme**
-- 🫑 **Multilingual Support** – Powered by Lingo.dev
-- 🤖 **AI-Powered Idea Expansion** – Using Gemini
-- 📧 **Email Notifications & Weekly Summaries**
-- 🥝 **Discover Public Ideas** – Like/dislike, GitHub/Preview links
-- 🌳 **Custom Categories** – Add/remove categories per idea
-- 🍏 **Mark as Complete/Seen** – Track progress visually
-- 💚 **Free & Open Source**
-
-## 📦 Installation & Setup
-
-### Prerequisites
-
-- Node.js 16+
-- Appwrite account and project
-
-### Local Development (Main Branch – React)
+### 1. Install dependencies
 
 ```bash
-# Clone repository
-git clone https://github.com/AbhiVarde/idea-tracker.git
-cd idea-tracker
-
-# Install dependencies
 npm install
-
-# Start development server
-npm start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to start managing your ideas.
+### 2. Configure environment
 
-### Local Development (Feature Branches – Vite + React)
+1. Copy `.env.example` to `.env`.
+2. Fill in your Appwrite project/database/bucket IDs and any AI keys.
+3. For full backend setup (auth, database, storage, AI), see `APPWRITE_SETUP.md`.
+
+### 3. Run in development
 
 ```bash
-# Clone repository and switch branch
-git clone https://github.com/AbhiVarde/idea-tracker.git
-cd idea-tracker
-git checkout [branch-name]
-
-# Install dependencies
-npm install
-
-# Start development server
 npm run dev
 ```
 
-Open [http://localhost:5173](http://localhost:5173) to start managing your ideas.
+The app runs at `http://localhost:3000` (see `vite.config.js` for the dev server port).
 
-## 🤝 Contributing
+### 4. Build & run in production
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit changes (`git commit -m 'feat: add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing-feature`)
-5. Open Pull Request
+```bash
+npm run build    # builds to /build
+npm start        # serves the built app via Express (server.js)
+```
 
-**Development Guidelines:**
+`server.js` serves the SPA from the `build` folder and exposes AI routes under `/api/ai/*`.
 
-- Follow existing code patterns
-- Test idea management scenarios thoroughly
-- Maintain responsive design
-- Keep commits focused and descriptive
+## 🔐 Secret management
 
-## 💖 Support
+- Keep AI keys such as `GEMINI_API_KEY` on the **server** or in **Appwrite Function secrets**.
+- Do **not** put private AI keys directly into browser-exposed `VITE_*` environment variables.
 
-**Love Idea Tracker? Help me keep building!**
+## 📄 License
 
-- 💚 **$5 / month – Monthly Supporter** → Recognition in GitHub README
-- 🌟 **$19 / month – Monthly Sponsor** → README + Portfolio recognition
-- 🚀 **$49 / month – Featured Sponsor** → README + Portfolio + promotion on Sync UI
-
-[👉 Become a Sponsor](https://github.com/sponsors/AbhiVarde)
-
-## License
-
-Idea Tracker is licensed under the [MIT License](http://choosealicense.com/licenses/mit/). All rights reserved.
-
-## Authors
-
-Idea Tracker is created and maintained by [Abhi Varde](https://www.abhivarde.in/)
-
----
-
-⭐ **Found this helpful? Give it a star!**
+This project is available under the MIT License.

@@ -182,9 +182,16 @@ export function Profile({ navigate }) {
 
             <div className="flex-grow w-full">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                <p className="text-gray-900 dark:text-white text-sm sm:text-md break-words">
-                  {user.current.email}
-                </p>
+                <div>
+                  <p className="text-gray-900 dark:text-white text-sm sm:text-md break-words">
+                    {user.current.prefs?.displayName || user.current.email}
+                  </p>
+                  {user.current.prefs?.bio && (
+                    <p className="mt-1 text-xs text-gray-600 dark:text-gray-400 break-words">
+                      {user.current.prefs.bio}
+                    </p>
+                  )}
+                </div>
                 <div className="flex items-center gap-2 bg-[#FF6500]/10 border border-[#FF6500]/30 rounded-full px-3 py-1">
                   <Zap className="w-4 h-4 text-[#FF6500]" />
                   <span className="text-xs font-medium text-gray-900 dark:text-white">

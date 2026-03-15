@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useUser } from "../lib/context/user";
 import { useIdeas } from "../lib/context/ideas";
+import { storage } from "../lib/appwrite";
 import { motion, AnimatePresence } from "framer-motion";
 import FlipWords from "../components/FlipWords";
 import { AIExpansion } from "../components/dialogs/AIExpansion";
@@ -27,6 +28,7 @@ import {
   CheckCircle2,
   RotateCcw,
   Globe,
+  MessageCircle,
 } from "lucide-react";
 
 const DEFAULT_CATEGORIES = [
@@ -79,6 +81,7 @@ export function Home({ navigate }) {
   const [editGithubUrl, setEditGithubUrl] = useState("");
   const [previewUrl, setPreviewUrl] = useState("");
   const [editPreviewUrl, setEditPreviewUrl] = useState("");
+  const [imageFile, setImageFile] = useState(null);
 
   const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -100,6 +103,8 @@ export function Home({ navigate }) {
   // Custom categories
   const [showCategoryForm, setShowCategoryForm] = useState(false);
   const [newCategory, setNewCategory] = useState("");
+
+  const [commentDrafts, setCommentDrafts] = useState({});
 
   // Get all available categories
   const allCategories = [...DEFAULT_CATEGORIES, ...ideas.customCategories];
@@ -288,6 +293,7 @@ export function Home({ navigate }) {
         previewUrl: trimmedPreviewUrl || null,
         likes: 0,
         likedBy: [],
+        imageFile,
       });
 
       setTitle("");
@@ -296,6 +302,7 @@ export function Home({ navigate }) {
       setIsPublic(false);
       setGithubUrl("");
       setPreviewUrl("");
+      setImageFile(null);
       setShowForm(false);
     } catch (err) {
       console.error(err);
@@ -463,6 +470,19 @@ export function Home({ navigate }) {
     } catch (err) {
       console.error(err);
       toast.error("Failed to mark idea as active");
+    }
+  };
+
+  const handleAddComment = async (ideaId) => {
+    const text = (commentDrafts[ideaId] || "").trim();
+    if (!text) return;
+
+    try {
+      await ideas.addComment(ideaId, text);
+      setCommentDrafts((prev) => ({ ...prev, [ideaId]: "" }));
+    } catch (err) {
+      console.error(err);
+      // Error toast is handled in ideas context
     }
   };
 
@@ -806,6 +826,31 @@ export function Home({ navigate }) {
                         minLength={10}
                         className="w-full text-sm px-3 py-2 dark:bg-gray-800/50 bg-gray-50 border-[0.5px] dark:border-gray-700 border-gray-200 rounded-lg dark:text-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#FF6500] focus:border-transparent resize-none transition-all duration-200"
                       />
+
+                      {/* Image upload */}
+                      <div className="space-y-1">
+                        <label className="block text-xs font-medium text-gray-700 dark:text-gray-300">
+                          Image (optional)
+                        </label>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (!file) {
+                              setImageFile(null);
+                              return;
+                            }
+                            if (file.size > 5 * 1024 * 1024) {
+                              toast.error("Image size should be less than 5MB");
+                              e.target.value = "";
+                              return;
+                            }
+                            setImageFile(file);
+                          }}
+                          className="block w-full text-xs text-gray-700 dark:text-gray-300 file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-medium file:bg-[#FF6500] file:text-white hover:file:bg-[#FF6500]/90 cursor-pointer"
+                        />
+                      </div>
 
                       {/* Priority + GitHub + Preview */}
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
@@ -1583,6 +1628,68 @@ export function Home({ navigate }) {
                               {idea.description}
                             </p>
                           )}
+
+                          {/* Idea image */}
+                          {idea.imageId && (
+                            <div className="mb-2.5">
+                              <img
+                                src={storage.getFileView(
+                                  import.meta.env.VITE_APPWRITE_STORAGE_BUCKET_ID,
+                                  idea.imageId
+                                )}
+                                alt={idea.title}
+                                className="w-full rounded-lg object-cover max-h-64"
+                              />
+                            </div>
+                          )}
+
+                          {/* Comments */}
+                          <div className="mt-2 space-y-2">
+                            {Array.isArray(idea.comments) &&
+                              idea.comments.length > 0 && (
+                                <div className="space-y-1">
+                                  {idea.comments.map((comment) => (
+                                    <div
+                                      key={comment.id}
+                                      className="flex items-start gap-2 text-xs text-gray-700 dark:text-gray-300"
+                                    >
+                                      <MessageCircle className="w-3 h-3 mt-0.5 text-gray-400 flex-shrink-0" />
+                                      <div className="space-y-0.5">
+                                        <span className="font-medium">
+                                          {comment.userName || "User"}
+                                        </span>
+                                        <p className="break-words break-all">
+                                          {comment.text}
+                                        </p>
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+
+                            <div className="flex items-center gap-2">
+                              <input
+                                type="text"
+                                placeholder="Add a comment..."
+                                value={commentDrafts[idea.$id] || ""}
+                                onChange={(e) =>
+                                  setCommentDrafts((prev) => ({
+                                    ...prev,
+                                    [idea.$id]: e.target.value,
+                                  }))
+                                }
+                                className="flex-1 text-xs px-2 py-1 rounded-md dark:bg-gray-900/40 bg-gray-50 border-[0.5px] dark:border-gray-800 border-gray-200 dark:text-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-[#FD366E] focus:border-transparent"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => handleAddComment(idea.$id)}
+                                className="inline-flex items-center justify-center px-2 py-1 rounded-md bg-[#FD366E] text-white text-xs hover:bg-[#FD366E]/90 transition-colors disabled:opacity-50"
+                                disabled={!commentDrafts[idea.$id]?.trim()}
+                              >
+                                Send
+                              </button>
+                            </div>
+                          </div>
 
                           {/* Labels */}
                           {(idea.category ||

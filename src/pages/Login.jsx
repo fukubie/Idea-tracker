@@ -24,6 +24,16 @@ export function Login({ navigate }) {
     if (!password) return "Password is required";
     if (password.length < 8)
       return "Password must be at least 8 characters long";
+
+    const hasUpper = /[A-Z]/.test(password);
+    const hasLower = /[a-z]/.test(password);
+    const hasNumber = /[0-9]/.test(password);
+    const hasSpecial = /[^A-Za-z0-9]/.test(password);
+
+    if (!hasUpper || !hasLower || !hasNumber || !hasSpecial) {
+      return "Use upper & lower letters, a number, and a symbol.";
+    }
+
     return "";
   };
 
@@ -245,7 +255,22 @@ export function Login({ navigate }) {
             </div>
           </form>
 
-          <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-800">
+          <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-800">
+            <p className="text-gray-600 dark:text-gray-400 text-sm text-center mb-3">
+              Or continue securely with
+            </p>
+            <div className="flex justify-center mb-4">
+              <button
+                type="button"
+                onClick={() => user.loginWithDiscord()}
+                disabled={isLoading}
+                className="inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm bg-[#5865F2] text-white hover:bg-[#4752C4] transition-colors"
+              >
+                <span className="text-lg">⌗</span>
+                <span>Discord</span>
+              </button>
+            </div>
+
             <p className="text-gray-600 dark:text-gray-400 text-md text-center mb-4">
               What you'll get:
             </p>

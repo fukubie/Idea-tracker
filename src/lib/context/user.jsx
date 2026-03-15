@@ -71,10 +71,17 @@ export function UserProvider({ children }) {
     }
   }, [isInitialized]);
 
-  // Check if verified (skip check when VITE_SKIP_EMAIL_VERIFICATION=true, e.g. if verification emails don't arrive)
+  // Check if verified (email or phone). Can be relaxed via VITE_SKIP_EMAIL_VERIFICATION,
+  // but for production it should remain "false" so verification is required.
   const isUserVerified = () => {
     if (import.meta.env.VITE_SKIP_EMAIL_VERIFICATION === "true") return true;
-    return user?.prefs?.authMethod === "oauth" || user?.emailVerification === true;
+    if (!user) return false;
+
+    const isEmailVerified = user.emailVerification === true;
+    const isPhoneVerified = user.phoneVerification === true;
+    const isOAuth = user.prefs?.authMethod === "oauth";
+
+    return isOAuth || isEmailVerified || isPhoneVerified;
   };
 
   // Send verification email
@@ -163,6 +170,35 @@ export function UserProvider({ children }) {
     );
   };
 
+  const updateProfile = async ({ name, role, bio }) => {
+    if (!user) return;
+
+    try {
+      const currentPrefs = user.prefs || {};
+      const updatedPrefs = {
+        ...currentPrefs,
+        ...(name ? { displayName: name } : {}),
+        ...(role ? { role } : {}),
+        ...(typeof bio === "string" ? { bio } : {}),
+      };
+
+      await account.updatePrefs(updatedPrefs);
+
+      if (name && name !== user.name) {
+        await account.updateName(name);
+      }
+
+      const refreshed = await account.get();
+      setUser(refreshed);
+      toast.success("Profile updated");
+      return refreshed;
+    } catch (error) {
+      console.error("Update profile error:", error);
+      toast.error("Failed to update profile");
+      throw error;
+    }
+  };
+
   // Login/register
   const login = async (email, password) => {
     try {
@@ -223,6 +259,12 @@ export function UserProvider({ children }) {
   const loginWithDiscord = () =>
     account.createOAuth2Token(
       OAuthProvider.Discord,
+      `${window.location.origin}/`,
+      `${window.location.origin}/login`
+    );
+  const loginWithApple = () =>
+    account.createOAuth2Token(
+      OAuthProvider.Apple,
       `${window.location.origin}/`,
       `${window.location.origin}/login`
     );
@@ -371,7 +413,9 @@ export function UserProvider({ children }) {
     loginWithGoogle,
     loginWithGithub,
     loginWithDiscord,
+    loginWithApple,
     deleteAccount,
+    updateProfile,
     uploadProfilePicture,
     removeProfilePicture,
     getProfilePictureUrl,

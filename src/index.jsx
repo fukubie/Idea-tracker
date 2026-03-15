@@ -13,14 +13,27 @@ function getLocaleCookie() {
 
 function AppWithTranslations() {
   const [dictionary, setDictionary] = useState(null);
+  const [locale, setLocale] = useState(() => getLocaleCookie());
 
   useEffect(() => {
     let cancelled = false;
-    getDictionaryForLocale(getLocaleCookie()).then((d) => {
+    getDictionaryForLocale(locale).then((d) => {
       if (!cancelled) setDictionary(d);
     });
     return () => { cancelled = true; };
-  }, []);
+  }, [locale]);
+
+  useEffect(() => {
+    const handler = (event) => {
+      const newLocale = event?.detail?.locale;
+      if (!newLocale) return;
+
+      setLocale(newLocale);
+    };
+
+    window.addEventListener("lingo-locale-changed", handler);
+    return () => window.removeEventListener("lingo-locale-changed", handler);
+  }, [locale]);
 
   if (!dictionary) {
     return (

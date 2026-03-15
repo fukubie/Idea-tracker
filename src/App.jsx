@@ -2,11 +2,13 @@ import { useState, useEffect } from "react";
 import { Login } from "./pages/Login";
 import { Home } from "./pages/Home";
 import { Discover } from "./pages/Discover";
+import { Messages } from "./pages/Messages";
 import { Profile } from "./pages/Profile";
 import { NotFound } from "./pages/NotFound";
 import { VerificationPage } from "./pages/Verification";
 import { UserProvider, useUser } from "./lib/context/user";
 import { IdeasProvider } from "./lib/context/ideas";
+import { MessagesProvider } from "./lib/context/messages";
 import { ThemeProvider, useTheme } from "./lib/context/theme";
 import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "./components/Navbar";
@@ -17,16 +19,14 @@ const validRoutes = ["/", "/login", "/profile", "/discover", "/verify-email"];
 
 function AppContent() {
   const [currentPage, setCurrentPage] = useState("home");
-  const { theme } = useTheme();
+  const { theme, effectiveTheme } = useTheme();
   const [loading, setLoading] = useState(true);
 
-  // Global app background based on selected theme
+  // Global app background based on effective theme (resolves "system" correctly)
   const backgroundClass =
-    theme === "light"
+    effectiveTheme === "light"
       ? "bg-[#E9FCE3]" // light green for light mode
-      : theme === "dark"
-        ? "bg-[#C40C0C]" // dark orange for dark mode
-        : "bg-[#5C4033]"; // brown when using system theme
+      : "bg-[#C40C0C]"; // dark orange for dark mode
 
   useEffect(() => {
     const path = window.location.pathname;
@@ -119,42 +119,45 @@ function AppContent() {
 
     return (
       <IdeasProvider>
-        {currentPage !== "404" && (
-          <Navbar navigate={navigate} currentPage={currentPage} />
-        )}
-        <main
-          className={`flex-grow ${
-            currentPage !== "404" ? "container mx-auto p-4" : ""
-          }`}
-        >
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentPage}
-              initial="initial"
-              animate="in"
-              exit="out"
-              variants={pageVariants}
-              className="h-full"
-            >
-              {currentPage === "login" && <Login navigate={navigate} />}
-              {currentPage === "profile" && <Profile navigate={navigate} />}
+        <MessagesProvider>
+          {currentPage !== "404" && (
+            <Navbar navigate={navigate} currentPage={currentPage} />
+          )}
+          <main
+            className={`flex-grow ${
+              currentPage !== "404" ? "container mx-auto p-4" : ""
+            }`}
+          >
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentPage}
+                initial="initial"
+                animate="in"
+                exit="out"
+                variants={pageVariants}
+                className="h-full"
+              >
+                {currentPage === "login" && <Login navigate={navigate} />}
+                {currentPage === "profile" && <Profile navigate={navigate} />}
               {currentPage === "home" && <Home navigate={navigate} />}
               {currentPage === "discover" && <Discover navigate={navigate} />}
-              {currentPage === "404" && (
-                <div className="h-full flex items-center justify-center">
-                  <NotFound navigate={navigate} />
-                </div>
-              )}
-            </motion.div>
-          </AnimatePresence>
-        </main>
-        {currentPage !== "404" && <Footer />}
-        <Toaster
-          theme="system"
-          visibleToasts={3}
-          position="top-right"
-          style={{ fontFamily: '"Poppins", sans-serif' }}
-        />
+              {currentPage === "messages" && <Messages navigate={navigate} />}
+                {currentPage === "404" && (
+                  <div className="h-full flex items-center justify-center">
+                    <NotFound navigate={navigate} />
+                  </div>
+                )}
+              </motion.div>
+            </AnimatePresence>
+          </main>
+          {currentPage !== "404" && <Footer />}
+          <Toaster
+            theme="system"
+            visibleToasts={3}
+            position="top-right"
+            style={{ fontFamily: '"Poppins", sans-serif' }}
+          />
+        </MessagesProvider>
       </IdeasProvider>
     );
   }

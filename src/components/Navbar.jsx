@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useUser } from "../lib/context/user";
 import { motion, AnimatePresence } from "framer-motion";
-import { LanguageSwitcher } from "./LanguageSwitcher";
 import AccountSettings from "./dialogs/AccountSettings";
 import NotificationPreferences from "./dialogs/NotificationPreferences";
 import ThemeSelector from "./ThemeSelector";
@@ -15,7 +14,9 @@ import {
   Settings,
   Bell,
   Compass,
+  MessageCircle,
 } from "lucide-react";
+import { useMessages } from "../lib/context/messages";
 
 const PRIMARY_LOGO_SRC = "/images/logo%20(2).png";
 import AnnouncementBar from "./AnnouncementBar";
@@ -26,6 +27,7 @@ function Navbar({ navigate, currentPage }) {
   const [showSettings, setShowSettings] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const dropdownRef = useRef(null);
+  const messages = useMessages();
 
   const handleLogout = async () => {
     try {
@@ -166,7 +168,7 @@ function Navbar({ navigate, currentPage }) {
               <img
                 src={PRIMARY_LOGO_SRC}
                 alt="VerQyx"
-                className="h-11 w-auto object-contain"
+                className="h-14 w-auto object-contain"
               />
               <span>
                 <span className="text-black dark:text-white">Ver</span>
@@ -183,6 +185,9 @@ function Navbar({ navigate, currentPage }) {
     );
   }
 
+  const messageCount = messages?.conversations?.length || 0;
+  const badgeLabel = messageCount > 99 ? "99+" : messageCount;
+
   return (
     <>
       <AnnouncementBar />
@@ -193,11 +198,11 @@ function Navbar({ navigate, currentPage }) {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: "easeOut", delay: 0 }}
       >
-        <div className="max-w-2xl mx-auto px-2 sm:px-4 py-1.5 sm:py-3">
-          <div className="flex flex-row sm:items-center justify-between gap-2 sm:gap-0 py-2 sm:py-0">
+        <div className="max-w-4xl mx-auto px-3 sm:px-4 py-1.5 sm:py-3">
+          <div className="flex flex-row items-center justify-between gap-3 sm:gap-6 py-1 sm:py-0">
             <motion.button
               onClick={() => navigate("home")}
-              className="flex items-center space-x-3 text-gray-900 dark:text-white font-extrabold text-xl"
+              className="flex items-center space-x-3 text-gray-900 dark:text-white font-extrabold text-xl flex-shrink-0"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               transition={{ duration: 0.2 }}
@@ -205,9 +210,9 @@ function Navbar({ navigate, currentPage }) {
               <img
                 src={PRIMARY_LOGO_SRC}
                 alt="VerQyx"
-                className="h-11 w-auto object-contain"
+                className="h-14 w-auto object-contain"
               />
-              <span className="hidden font-semibold sm:inline">
+              <span className="hidden md:inline font-semibold">
                 {!user?.current && (
                   <>
                     <span className="text-black dark:text-white">Ver</span>
@@ -217,7 +222,7 @@ function Navbar({ navigate, currentPage }) {
               </span>
             </motion.button>
 
-            <div className="flex flex-wrap justify-end items-center space-x-1 sm:space-x-2">
+            <div className="flex flex-row items-center justify-end flex-1 space-x-1 sm:space-x-3 md:space-x-4">
               {user.current ? (
                 <>
                   <NavButton
@@ -232,16 +237,29 @@ function Navbar({ navigate, currentPage }) {
                     isActive={currentPage === "discover"}
                     onClick={() => navigate("discover")}
                   />
+                  <button
+                    type="button"
+                    onClick={() => navigate("messages")}
+                    className={`relative inline-flex items-center justify-center px-2 py-1 rounded-lg text-xs font-medium transition-colors ${
+                      currentPage === "messages"
+                        ? "text-[#FF6500] bg-[#FF6500]/10"
+                        : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800/60"
+                    }`}
+                  >
+                    <MessageCircle className="w-4 h-4 mr-1" />
+                    <span className="hidden sm:inline">Messages</span>
+                    {messageCount > 0 && (
+                      <span className="ml-1 inline-flex items-center justify-center min-w-[16px] h-[16px] px-1 rounded-full bg-[#FF6500] text-white text-[10px]">
+                        {badgeLabel}
+                      </span>
+                    )}
+                  </button>
                   <NavButton
                     icon={User}
                     label="Profile"
                     isActive={currentPage === "profile"}
                     onClick={() => navigate("profile")}
                   />
-
-                  <div className="pl-1.5">
-                    <LanguageSwitcher />
-                  </div>
 
                   <div
                     className="relative ml-2 sm:ml-4 pl-3 border-l border-gray-300 dark:border-gray-700"
@@ -327,24 +345,17 @@ function Navbar({ navigate, currentPage }) {
                   </div>
                 </>
               ) : (
-                <>
-                  <div className="flex items-center space-x-2">
-                    <div className="pl-1.5">
-                      <LanguageSwitcher />
-                    </div>
-
-                    <ThemeSelector variant="mobile-dropdown" />
-
-                    <NavButton
-                      icon={LogIn}
-                      label="Login"
-                      isActive={true}
-                      onClick={() => navigate("login")}
-                      forceActiveStyle
-                      compact
-                    />
-                  </div>
-                </>
+                <div className="flex items-center space-x-2">
+                  <ThemeSelector variant="mobile-dropdown" />
+                  <NavButton
+                    icon={LogIn}
+                    label="Login"
+                    isActive={true}
+                    onClick={() => navigate("login")}
+                    forceActiveStyle
+                    compact
+                  />
+                </div>
               )}
             </div>
           </div>

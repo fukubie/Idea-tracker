@@ -51,7 +51,14 @@ export function AIExpansion({ idea, isOpen, onClose, onExpand }) {
   const formatInlineContent = (text) => {
     if (!text) return text;
 
-    let formatted = text
+    // Escape HTML first to prevent XSS from AI output,
+    // then apply minimal markdown-style formatting.
+    const escaped = text
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+
+    let formatted = escaped
       .replace(
         /\*\*(.*?)\*\*/g,
         '<strong class="font-medium text-gray-800 dark:text-gray-100">$1</strong>'

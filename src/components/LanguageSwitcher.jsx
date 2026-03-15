@@ -44,7 +44,10 @@ function LanguageSwitcherSelect() {
     const newLocale = e.target.value;
     setLocaleCookie(newLocale);
     setLocale(newLocale);
-    window.location.reload();
+
+    window.dispatchEvent(
+      new CustomEvent("lingo-locale-changed", { detail: { locale: newLocale } })
+    );
   };
 
   return (

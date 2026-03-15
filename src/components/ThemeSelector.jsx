@@ -14,18 +14,8 @@ const ThemeSelector = ({ variant = "dropdown" }) => {
     { id: "system", label: "System", icon: Monitor },
   ];
 
-  // Enhanced theme switching with View Transitions API
   const handleThemeChange = (newTheme) => {
-    // Check if View Transitions API is supported
-    if (!document.startViewTransition) {
-      setTheme(newTheme);
-      return;
-    }
-
-    // Use View Transitions API for smooth theme switching
-    document.startViewTransition(() => {
-      setTheme(newTheme);
-    });
+    setTheme(newTheme);
   };
 
   useEffect(() => {

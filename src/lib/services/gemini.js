@@ -1,6 +1,7 @@
-const GEMINI_API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
-// Use the current, supported Gemini model + API version
-const GEMINI_MODEL = "gemini-1.5-flash-latest";
+import { functions } from "../appwrite";
+
+const EXPAND_FUNCTION_ID = import.meta.env.VITE_APPWRITE_FUNCTION_ID;
+const PITCH_FUNCTION_ID = import.meta.env.VITE_APPWRITE_PITCH_FUNCTION_ID;
 
 async function ensureAuthenticated() {
   const { account } = await import("../appwrite");
@@ -12,75 +13,63 @@ async function ensureAuthenticated() {
   }
 }
 
-async function callGemini(prompt) {
-  if (!GEMINI_API_KEY) {
+async function callAppwriteFunction(functionId, payload) {
+  if (!functionId) {
+    throw new Error("AI function is not configured in Appwrite.");
+  }
+
+  const response = await functions.createExecution(
+    functionId,
+    JSON.stringify(payload)
+  );
+
+  if (response.status !== "completed") {
+    console.error("AI function execution failed:", response);
     throw new Error(
-      "Gemini API is not configured. Add VITE_GOOGLE_API_KEY to your .env."
+      `AI function execution failed with status: ${response.status}`
     );
   }
 
-  const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        contents: [
-          {
-            parts: [{ text: prompt }],
-          },
-        ],
-      }),
-    }
-  );
-
-  if (!res.ok) {
-    console.error("Gemini HTTP error:", res.status, await res.text());
-    throw new Error("Gemini request failed");
+  if (response.errors && response.errors.trim()) {
+    console.error("AI function errors:", response.errors);
+    throw new Error(`AI function error: ${response.errors}`);
   }
 
-  const data = await res.json();
-  const text =
-    data?.candidates?.[0]?.content?.parts
-      ?.map((p) => p.text || "")
-      .join("") || "";
-
-  if (!text.trim()) {
-    throw new Error("Gemini returned an empty response");
+  if (!response.responseBody || response.responseBody.trim() === "") {
+    throw new Error("AI function returned empty response");
   }
 
-  return text.trim();
+  let result;
+  try {
+    result = JSON.parse(response.responseBody);
+  } catch (parseError) {
+    console.error("Failed to parse AI function response:", response.responseBody);
+    throw new Error("Invalid response format from AI function");
+  }
+
+  return result;
 }
 
 export async function expandIdea(title, description, category, priority) {
   try {
     await ensureAuthenticated();
 
-    const safeDescription = description || "No detailed description provided.";
+    const payload = {
+      title,
+      description: description || "No detailed description provided.",
+      category,
+      priority,
+    };
 
-    const prompt = `You are helping a small team refine a project idea.
+    const result = await callAppwriteFunction(EXPAND_FUNCTION_ID, payload);
 
-Title: ${title}
-Description: ${safeDescription}
-Category: ${category}
-Priority: ${priority}
-
-Using clear markdown, expand this into:
-- A strengthened concept
-- Key features / capabilities
-- Risks and constraints
-- Suggested tech stack (brief)
-- Next 5–10 concrete steps
-
-Keep it concise but useful for planning. Write in English.`;
-
-    const expansionText = await callGemini(prompt);
+    if (!result.success) {
+      throw new Error(result.error || "Expansion failed");
+    }
 
     return {
       success: true,
-      expansion: expansionText,
+      expansion: result.expansion,
     };
   } catch (error) {
     console.error("Expansion error:", error);
@@ -100,31 +89,22 @@ export async function generatePitch(
   try {
     await ensureAuthenticated();
 
-    const safeDescription = description || "No detailed description provided.";
+    const payload = {
+      title,
+      description: description || "No detailed description provided.",
+      targetAudience,
+      goal,
+    };
 
-    const prompt = `You are preparing a short pitch summary for a project.
+    const result = await callAppwriteFunction(PITCH_FUNCTION_ID, payload);
 
-Title: ${title}
-Idea: ${safeDescription}
-Target audience: ${targetAudience}
-Goal: ${goal}
-
-Write a concise, structured markdown pitch with sections:
-- Problem
-- Solution
-- Target users
-- Value proposition
-- Key features
-- Implementation approach
-- Impact and future potential
-
-Keep it under 500 words and easy to skim.`;
-
-    const pitchText = await callGemini(prompt);
+    if (!result.success) {
+      throw new Error(result.error || "Pitch generation failed");
+    }
 
     return {
       success: true,
-      pitch: pitchText,
+      pitch: result.pitch,
     };
   } catch (error) {
     console.error("Pitch generation error:", error);

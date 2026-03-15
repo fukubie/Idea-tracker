@@ -3,7 +3,7 @@ import { useUser } from "../lib/context/user";
 import { useIdeas } from "../lib/context/ideas";
 import { motion, AnimatePresence } from "framer-motion";
 import moment from "moment";
-import { Heart, Github, Compass, Globe } from "lucide-react";
+import { Heart, Github, Compass, Globe, MessageCircle } from "lucide-react";
 
 const CATEGORIES = [
   "Web App",
@@ -34,11 +34,12 @@ const getCategoryCount = (category, ideas) => {
 
 export function Discover({ navigate }) {
   const { current: currentUser } = useUser();
-  const { fetchPublicIdeas, toggleLike } = useIdeas();
+  const { fetchPublicIdeas, toggleLike, addComment } = useIdeas();
 
   const [publicIdeas, setPublicIdeas] = useState([]);
   const [filterCategory, setFilterCategory] = useState("All");
   const [isLoading, setIsLoading] = useState(false);
+  const [commentDrafts, setCommentDrafts] = useState({});
 
   // Fetch public ideas
   useEffect(() => {
@@ -88,6 +89,37 @@ export function Discover({ navigate }) {
       await toggleLike(ideaId, publicIdeas, setPublicIdeas);
     } catch (error) {
       console.error("Failed to toggle like:", error);
+    }
+  };
+
+  const parseComments = (raw) => {
+    if (!raw) return [];
+    if (Array.isArray(raw)) return raw;
+    if (typeof raw === "string") {
+      try {
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch {
+        return [];
+      }
+    }
+    return [];
+  };
+
+  const handleAddComment = async (ideaId) => {
+    if (!currentUser) {
+      navigate("login");
+      return;
+    }
+
+    const text = (commentDrafts[ideaId] || "").trim();
+    if (!text) return;
+
+    try {
+      await addComment(ideaId, text, publicIdeas, setPublicIdeas);
+      setCommentDrafts((prev) => ({ ...prev, [ideaId]: "" }));
+    } catch (error) {
+      console.error("Failed to add comment:", error);
     }
   };
 
@@ -252,6 +284,55 @@ export function Discover({ navigate }) {
                     <p className="text-sm text-gray-600 dark:text-gray-400 mb-2 break-words break-all min-w-0 leading-snug line-clamp-3">
                       {idea.description}
                     </p>
+
+                    {/* Comments */}
+                    <div className="mt-1 space-y-1">
+                      {parseComments(idea.comments).length > 0 && (
+                        <div className="space-y-1 max-h-24 overflow-y-auto">
+                          {parseComments(idea.comments).map((comment) => (
+                            <div
+                              key={comment.id}
+                              className="flex items-start gap-1.5 text-xs text-gray-700 dark:text-gray-300"
+                            >
+                              <MessageCircle className="w-3 h-3 mt-0.5 text-gray-400 flex-shrink-0" />
+                              <div>
+                                <span className="font-medium">
+                                  {comment.userName || "User"}
+                                </span>
+                                <p className="break-words break-all">
+                                  {comment.text}
+                                </p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {currentUser && (
+                        <div className="flex items-center gap-2 mt-1">
+                          <input
+                            type="text"
+                            placeholder="Add a comment..."
+                            value={commentDrafts[idea.$id] || ""}
+                            onChange={(e) =>
+                              setCommentDrafts((prev) => ({
+                                ...prev,
+                                [idea.$id]: e.target.value,
+                              }))
+                            }
+                            className="flex-1 text-xs px-2 py-1 rounded-md dark:bg-gray-900/40 bg-gray-50 border-[0.5px] dark:border-gray-800 border-gray-200 dark:text-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-[#FD366E] focus:border-transparent"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => handleAddComment(idea.$id)}
+                            disabled={!commentDrafts[idea.$id]?.trim()}
+                            className="text-xs px-2 py-1 rounded-md bg-[#FD366E] text-white hover:bg-[#FD366E]/90 disabled:opacity-50"
+                          >
+                            Send
+                          </button>
+                        </div>
+                      )}
+                    </div>
 
                     {/* Footer */}
                     <div className="flex justify-between items-center text-xs text-gray-500 dark:text-gray-400 mt-auto pt-2 border-t border-gray-100 dark:border-gray-800 gap-2 min-w-0">

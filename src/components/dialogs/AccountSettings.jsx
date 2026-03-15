@@ -14,6 +14,12 @@ const AccountSettings = ({ isOpen, onClose }) => {
   const [showProfileActions, setShowProfileActions] = useState(false);
   const [error, setError] = useState("");
   const fileInputRef = useRef(null);
+  const [displayName, setDisplayName] = useState(
+    user.current?.prefs?.displayName || user.current?.name || ""
+  );
+  const [role, setRole] = useState(user.current?.prefs?.role || "user");
+  const [isSavingProfile, setIsSavingProfile] = useState(false);
+  const [bio, setBio] = useState(user.current?.prefs?.bio || "");
 
   const handleImageUpload = async (event) => {
     const file = event.target.files[0];
@@ -250,6 +256,88 @@ const AccountSettings = ({ isOpen, onClose }) => {
                 onChange={handleImageUpload}
                 className="hidden"
               />
+            </div>
+
+            {/* Profile details: name, role, bio */}
+            <div className="bg-[#f4f4f7] dark:bg-gray-800/30 rounded-xl p-4 space-y-3">
+              <div className="text-left">
+                <p className="text-sm font-medium text-gray-900 dark:text-white mb-1">
+                  Profile details
+                </p>
+                <p className="text-xs text-gray-600 dark:text-gray-400">
+                  Set how you appear and your role in the app.
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <label className="block text-xs font-medium text-gray-700 dark:text-gray-300">
+                  Name
+                </label>
+                <input
+                  type="text"
+                  value={displayName}
+                  onChange={(e) => setDisplayName(e.target.value)}
+                  placeholder="Your name"
+                  className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg text-sm px-3 py-[7px] text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#FD366E]"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="block text-xs font-medium text-gray-700 dark:text-gray-300">
+                  Role
+                </label>
+                <select
+                  value={role}
+                  onChange={(e) => setRole(e.target.value)}
+                  className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg text-sm px-3 py-[7px] text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#FD366E]"
+                >
+                  <option value="user">User (submit ideas)</option>
+                  <option value="reviewer">Reviewer (give feedback)</option>
+                </select>
+              </div>
+
+              <div className="space-y-2">
+                <label className="block text-xs font-medium text-gray-700 dark:text-gray-300">
+                  Bio
+                </label>
+                <textarea
+                  rows={3}
+                  value={bio}
+                  onChange={(e) => setBio(e.target.value.slice(0, 200))}
+                  placeholder="Tell others what you like to work on (max 200 characters)..."
+                  className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg text-sm px-3 py-[7px] text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#FD366E] resize-none"
+                />
+                <p className="text-[11px] text-gray-500 dark:text-gray-400 text-right">
+                  {bio.length}/200
+                </p>
+              </div>
+
+              <motion.button
+                onClick={async () => {
+                  setIsSavingProfile(true);
+                  setError("");
+                  try {
+                    await user.updateProfile({
+                      name: displayName.trim(),
+                      role,
+                    bio: bio.trim(),
+                    });
+                  } catch (e) {
+                    setError(e.message || "Failed to update profile");
+                  } finally {
+                    setIsSavingProfile(false);
+                  }
+                }}
+                disabled={isSavingProfile}
+                className="w-full flex items-center justify-center space-x-2 bg-[#FD366E] hover:bg-[#FD366E]/90 text-white font-medium py-2 rounded-lg transition-all disabled:opacity-60"
+                whileHover={!isSavingProfile ? { scale: 1.02 } : {}}
+                whileTap={!isSavingProfile ? { scale: 0.98 } : {}}
+              >
+                {isSavingProfile ? (
+                  <div className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                ) : null}
+                <span>{isSavingProfile ? "Saving..." : "Save profile"}</span>
+              </motion.button>
             </div>
 
             {error && (

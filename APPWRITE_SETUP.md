@@ -19,13 +19,15 @@ Follow these steps to connect Idea Tracker to Appwrite so **authentication** (em
 
 1. In the left sidebar, open **Auth** → **Settings**.
 2. Under **Email/Password**, turn **Enable** on.
-3. **Email verification:** Turn **off** if you don’t want verification (e.g. verification emails don’t arrive or you’re testing). The app will still work. If you turn it **on**, users must verify before the app treats them as verified unless you skip it in the app (see below).
+3. **Email verification:** Turn **on** for production so users must verify their email before using the app. Only turn this **off** temporarily for local testing.
 4. Under **Auth** → **Settings**, add your app URL(s) to **Authorized origins** (e.g. `http://localhost:3000`, `http://localhost:5173`, and your production URL when you deploy).
 
-### If verification emails don’t arrive or you want to skip verification
+### If verification emails don’t arrive (testing only)
 
-- **In Appwrite:** **Auth** → **Settings** → turn **Email verification** **off**. New users can sign in without verifying.
-- **In the app:** In `.env` set `VITE_SKIP_EMAIL_VERIFICATION=true`. The app will no longer show the “Verify your email” screen and will treat logged-in users as verified. Restart the dev server after changing `.env`.
+- **In Appwrite (testing only):** **Auth** → **Settings** → you can temporarily turn **Email verification** **off**.
+- **In the app (testing only):** In `.env` you can temporarily set `VITE_SKIP_EMAIL_VERIFICATION=true`. **Do not use this in production.**
+
+For the most secure setup, keep email verification **on** and `VITE_SKIP_EMAIL_VERIFICATION=false`.
 
 ---
 
@@ -67,6 +69,8 @@ In the Appwrite console, **tables** are what the app uses as “collections” �
 | likes          | integer | -            | no       |
 | likedBy        | string  | 5000         | no       |
 | expandedAt     | string  | 50           | no       |
+| comments       | string  | 10000        | no       |
+| imageId        | string  | 255          | no       |
 
 5. In the table, open **Settings** → **Permissions**:
    - Add: **Users** can **read**, **create**, **update**, **delete** (the app sets per-document permissions in code).
@@ -88,6 +92,24 @@ In the Appwrite console, **tables** are what the app uses as “collections” �
 
 For **customCategories** use type **string** (the app stores a JSON array as a string).  
 4. Set **Permissions** the same way as for the ideas table (users can read, create, update, delete).
+
+### Private messages table (optional but recommended)
+
+To support secure, private 1‑to‑1 messaging:
+
+1. In the **same database**, click **Create table**.
+2. Set the table **ID** to e.g. `private-messages` (or any ID you like).
+3. Add these attributes:
+
+| Attribute ID   | Type   | Required |
+|----------------|--------|----------|
+| fromUserId     | string | yes      |
+| toUserId       | string | yes      |
+| body           | string | yes      |
+
+4. In **Permissions**, allow authenticated **Users** to create documents.
+5. The app will set per‑document permissions so that **only the sender and recipient can read/update/delete each message**.
+6. If you use a custom ID for this table, put it into `.env` as `VITE_APPWRITE_MESSAGES_COLLECTION_ID`.
 
 ---
 

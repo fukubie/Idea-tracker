@@ -6,7 +6,7 @@ import {
   useRef,
   useCallback,
 } from "react";
-import { databases } from "../appwrite";
+import { databases, storage } from "../appwrite";
 import { ID, Query, Permission, Role } from "appwrite";
 import { toast } from "sonner";
 import { useUser } from "./user";
@@ -340,6 +340,18 @@ export function IdeasProvider({ children }) {
     pendingOperationsRef.current.add(tempId);
 
     try {
+      let imageId = null;
+      if (idea.imageFile) {
+        const uploaded = await storage.createFile(
+          import.meta.env.VITE_APPWRITE_STORAGE_BUCKET_ID,
+          ID.unique(),
+          idea.imageFile
+        );
+        imageId = uploaded.$id;
+      }
+
+      const { imageFile, ...ideaData } = idea;
+
       const permissions = [
         Permission.read(Role.user(user.$id)),
         Permission.update(Role.user(user.$id)),
@@ -356,7 +368,8 @@ export function IdeasProvider({ children }) {
         IDEAS_COLLECTION_ID,
         tempId,
         {
-          ...idea,
+          ...ideaData,
+          imageId,
           userId: user.$id,
           userName: user.name || "",
           userProfilePicture:
@@ -476,6 +489,97 @@ export function IdeasProvider({ children }) {
     );
     return todayPitches.length >= 3;
   };
+
+  const isIdeaExpired = (idea) => {
+    if (!idea?.$createdAt) return false;
+    const likesCount = idea.likes || 0;
+    if (likesCount >= 10) return false;
+
+    const createdTime = new Date(idea.$createdAt).getTime();
+    if (Number.isNaN(createdTime)) return false;
+
+    const now = Date.now();
+    const sevenDaysMs = 7 * 24 * 60 * 60 * 1000;
+    return now - createdTime > sevenDaysMs;
+  };
+
+  const parseComments = (rawComments) => {
+    if (!rawComments) return [];
+    if (Array.isArray(rawComments)) return rawComments;
+    if (typeof rawComments === "string") {
+      try {
+        const parsed = JSON.parse(rawComments);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch {
+        return [];
+      }
+    }
+    return [];
+  };
+
+  async function addComment(
+    ideaId,
+    text,
+    externalIdeas = null,
+    setExternalIdeas = null
+  ) {
+    if (!user) {
+      toast.error("Please log in to comment");
+      return;
+    }
+
+    const trimmed = text.trim();
+    if (!trimmed) return;
+
+    try {
+      const sourceIdeas = externalIdeas || ideas;
+      const existing = sourceIdeas.find((idea) => idea.$id === ideaId);
+      const existingComments = parseComments(existing?.comments);
+
+      const newComment = {
+        id: ID.unique(),
+        userId: user.$id,
+        userName: user.name || "",
+        text: trimmed,
+        createdAt: new Date().toISOString(),
+      };
+
+      const updatedComments = [...existingComments, newComment];
+
+      const response = await databases.updateDocument(
+        IDEAS_DATABASE_ID,
+        IDEAS_COLLECTION_ID,
+        ideaId,
+        {
+          comments: JSON.stringify(updatedComments),
+        }
+      );
+
+      if (externalIdeas && setExternalIdeas) {
+        setExternalIdeas((prev) =>
+          prev.map((idea) =>
+            idea.$id === ideaId
+              ? { ...idea, comments: updatedComments }
+              : idea
+          )
+        );
+      } else {
+        setIdeas((prev) =>
+          prev.map((idea) =>
+            idea.$id === ideaId
+              ? { ...response, comments: updatedComments }
+              : idea
+          )
+        );
+      }
+
+      return newComment;
+    } catch (err) {
+      console.error("Add comment error:", err);
+      toast.error("Failed to add comment. Please try again.");
+      throw err;
+    }
+  }
 
   async function expandWithAI(idea) {
     if (!user) {
@@ -659,7 +763,23 @@ export function IdeasProvider({ children }) {
           ]
         );
 
-        const uniqueIdeas = response.documents.filter(
+        const cleaned = response.documents.filter((idea) => !isIdeaExpired(idea));
+
+        // Best-effort background cleanup of expired ideas
+        const expired = response.documents.filter((idea) => isIdeaExpired(idea));
+        if (expired.length > 0) {
+          expired.forEach((idea) => {
+            databases
+              .deleteDocument(
+                IDEAS_DATABASE_ID,
+                IDEAS_COLLECTION_ID,
+                idea.$id
+              )
+              .catch(() => {});
+          });
+        }
+
+        const uniqueIdeas = cleaned.filter(
           (idea, index, self) =>
             index === self.findIndex((i) => i.$id === idea.$id)
         );
@@ -704,7 +824,18 @@ export function IdeasProvider({ children }) {
         ]
       );
 
-      return response.documents;
+      const cleaned = response.documents.filter((idea) => !isIdeaExpired(idea));
+
+      const expired = response.documents.filter((idea) => isIdeaExpired(idea));
+      if (expired.length > 0) {
+        expired.forEach((idea) => {
+          databases
+            .deleteDocument(IDEAS_DATABASE_ID, IDEAS_COLLECTION_ID, idea.$id)
+            .catch(() => {});
+        });
+      }
+
+      return cleaned;
     } catch (err) {
       console.error("Fetch public ideas error:", err);
       toast.error(getErrorMessage(err));
@@ -819,6 +950,9 @@ export function IdeasProvider({ children }) {
 
         if (payload.userId !== user.$id) return;
 
+         // Ignore expired ideas coming from realtime
+        if (isIdeaExpired(payload)) return;
+
         if (pendingOperationsRef.current.has(payload.$id)) {
           pendingOperationsRef.current.delete(payload.$id);
           return;
@@ -884,6 +1018,7 @@ export function IdeasProvider({ children }) {
     customCategories,
     addCustomCategory,
     removeCustomCategory,
+    addComment,
   };
 
   return (

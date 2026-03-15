@@ -1,10 +1,57 @@
 const express = require("express");
 const path = require("path");
+const helmet = require("helmet");
+const cors = require("cors");
+const rateLimit = require("express-rate-limit");
 
 const app = express();
 const port = process.env.PORT || 10000;
 
 const buildPath = path.join(__dirname, "build");
+
+// Security middlewares
+app.disable("x-powered-by");
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        imgSrc: ["'self'", "data:", "https:"],
+        connectSrc: ["'self'", "https:"],
+        fontSrc: ["'self'", "data:"],
+        objectSrc: ["'none'"],
+        frameAncestors: ["'none'"],
+        baseUri: ["'self'"],
+        formAction: ["'self'"],
+      },
+    },
+  })
+);
+
+const allowedOrigin = process.env.ALLOWED_ORIGIN;
+app.use(
+  cors(
+    allowedOrigin
+      ? {
+          origin: allowedOrigin,
+          methods: ["GET", "POST", "OPTIONS"],
+          allowedHeaders: ["Content-Type", "Authorization"],
+        }
+      : {
+          origin: false, // disable CORS by default for safety
+        }
+  )
+);
+
+// Basic rate limiting for AI routes to protect the Gemini API key
+const aiLimiter = rateLimit({
+  windowMs: 5 * 60 * 1000, // 5 minutes
+  max: 50, // max 50 AI requests per IP per window
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 
 app.use(express.json());
 app.use(express.static(buildPath));
@@ -47,7 +94,7 @@ async function callGemini(prompt) {
   return text;
 }
 
-app.post("/api/ai/expand", async (req, res) => {
+app.post("/api/ai/expand", aiLimiter, async (req, res) => {
   try {
     const { title, description, category, priority } = req.body || {};
 
@@ -76,7 +123,7 @@ Respond in markdown.`;
   }
 });
 
-app.post("/api/ai/pitch", async (req, res) => {
+app.post("/api/ai/pitch", aiLimiter, async (req, res) => {
   try {
     const { title, description, targetAudience, goal } = req.body || {};
 
