@@ -6,13 +6,14 @@ The Console only accepts **tar.gz** for manual upload. If that doesn’t work fo
 
 ## Option 1: Manual upload (tar.gz)
 
-1. **Create a tar.gz from the function folder**
-   - For **idea-expand**, the code lives in `appwrite-functions/` (with `src/main.js` and `package.json`). From the repo root:
+1. **Create a tar.gz with ONLY the function (not the whole app)**
+   - If the build installs 1900+ packages, you uploaded the wrong archive (e.g. the whole project). The function has **no** dependencies, so the build should be very fast.
+   - From the **repo root** (Idea-tracker folder), run:
      ```bash
      cd appwrite-functions
-     tar --exclude='*.tar.gz' -czf idea-expand.tar.gz .
+     tar --exclude='*.tar.gz' -czf idea-expand.tar.gz package.json src
      ```
-   - You get `appwrite-functions/idea-expand.tar.gz`. The archive must contain `src/main.js` and `package.json` at the top level.
+   - Use **only** `package.json` and `src` (no other files). You get `appwrite-functions/idea-expand.tar.gz`. Inside the archive: `package.json` and `src/main.js` at the top level.
 
 2. **In Appwrite Console**
    - Functions → **idea-expand** → **Deployments** → **Create deployment**.

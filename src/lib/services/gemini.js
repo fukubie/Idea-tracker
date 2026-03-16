@@ -20,7 +20,8 @@ async function callAppwriteFunction(functionId, payload) {
 
   const response = await functions.createExecution(
     functionId,
-    JSON.stringify(payload)
+    JSON.stringify(payload),
+    false // async: false = wait for completion, get responseBody in result
   );
 
   if (response.status !== "completed") {
