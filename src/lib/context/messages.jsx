@@ -16,8 +16,7 @@ export function useMessages() {
   return useContext(MessagesContext);
 }
 
-const MESSAGES_COLLECTION_ID =
-  import.meta.env.VITE_APPWRITE_MESSAGES_COLLECTION_ID || "private-messages";
+const MESSAGES_COLLECTION_ID = import.meta.env.VITE_APPWRITE_MESSAGES_COLLECTION_ID;
 
 export function MessagesProvider({ children }) {
   const { current: user } = useUser();
@@ -26,6 +25,11 @@ export function MessagesProvider({ children }) {
 
   const fetchMyMessages = useCallback(async () => {
     if (!user) {
+      setConversations([]);
+      return;
+    }
+    if (!MESSAGES_COLLECTION_ID) {
+      // Private messaging not configured.
       setConversations([]);
       return;
     }
@@ -56,7 +60,7 @@ export function MessagesProvider({ children }) {
       if (error?.code === 404) {
         console.warn(
           "Messages collection not found; private messaging is disabled.",
-          { collectionId: MESSAGES_COLLECTION_ID }
+          { collectionId: MESSAGES_COLLECTION_ID || "(not set)" }
         );
       } else {
         console.error("Failed to load messages:", error);
@@ -75,6 +79,10 @@ export function MessagesProvider({ children }) {
   const sendMessage = async (toUserId, body) => {
     if (!user) {
       toast.error("Please log in to send messages");
+      return;
+    }
+    if (!MESSAGES_COLLECTION_ID) {
+      toast.error("Private messaging is not configured.");
       return;
     }
     const text = (body || "").trim();

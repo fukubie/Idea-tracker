@@ -6,17 +6,18 @@ import {
   useRef,
   useCallback,
 } from "react";
-import { databases, storage } from "../appwrite";
+import { databases, storage, functions } from "../appwrite";
 import { ID, Query, Permission, Role } from "appwrite";
 import { toast } from "sonner";
 import { useUser } from "./user";
-import { expandIdea } from "../services/gemini";
-import { emailService } from "../services/emailService";
-import { generatePitch } from "../services/gemini";
 
 export const IDEAS_DATABASE_ID = import.meta.env.VITE_APPWRITE_DATABASE_ID;
 export const IDEAS_COLLECTION_ID = import.meta.env.VITE_APPWRITE_COLLECTION_ID;
 const PREFERENCES_COLLECTION_ID = "user-preferences";
+const IDEA_EXPAND_FUNCTION_ID =
+  import.meta.env.VITE_APPWRITE_FUNCTION_IDEA_EXPAND_ID;
+const IDEA_PITCH_FUNCTION_ID =
+  import.meta.env.VITE_APPWRITE_FUNCTION_IDEA_PITCH_ID;
 
 const IdeasContext = createContext();
 
@@ -583,42 +584,71 @@ export function IdeasProvider({ children }) {
 
   async function expandWithAI(idea) {
     if (!user) {
-      toast.error("Please log in to expand ideas");
+      toast.error("Please log in to use AI expansion");
       return;
     }
 
-    // Check daily limit
-    if (checkDailyExpansionLimit(ideas, user.$id)) {
-      toast.error("Daily limit reached! You can expand 3 ideas per day.");
+    if (!IDEA_EXPAND_FUNCTION_ID) {
+      toast.error("AI expansion is not configured. Missing function ID.");
+      return;
+    }
+
+    const hasReachedLimit = checkDailyExpansionLimit(ideas, user.$id);
+    if (hasReachedLimit) {
+      toast.error("Daily AI expansion limit reached (3 per day).");
       return;
     }
 
     try {
-      const result = await expandIdea(
-        idea.title,
-        idea.description,
-        idea.category,
-        idea.priority
+      const payload = {
+        mode: "expand",
+        ideaId: idea.$id,
+        title: idea.title,
+        description: idea.description,
+        category: idea.category,
+        priority: idea.priority,
+        tags: idea.tags,
+        userId: user.$id,
+      };
+
+      const execution = await functions.createExecution(
+        IDEA_EXPAND_FUNCTION_ID,
+        JSON.stringify(payload),
+        false
       );
 
-      if (result.success) {
-        const expandedAt = new Date().toISOString();
-
-        await update(idea.$id, {
-          aiExpansion: result.expansion,
-          expandedAt: expandedAt,
-        });
-
-        sendBatchedNotificationEmail("ideaExpanded", idea.title, user.$id);
-
-        return result.expansion;
-      } else {
-        throw new Error(result.error);
+      let expansionText = "";
+      try {
+        const parsed = JSON.parse(execution.responseBody || "{}");
+        expansionText = parsed.expansion || parsed.content || parsed.text || "";
+      } catch {
+        expansionText = execution.responseBody || "";
       }
+
+      if (!expansionText) {
+        toast.error("AI expansion failed. Empty response from function.");
+        return;
+      }
+
+      const updated = await databases.updateDocument(
+        IDEAS_DATABASE_ID,
+        IDEAS_COLLECTION_ID,
+        idea.$id,
+        {
+          aiExpansion: expansionText,
+          expandedAt: new Date().toISOString(),
+        }
+      );
+
+      setIdeas((prev) =>
+        prev.map((i) => (i.$id === idea.$id ? updated : i))
+      );
+
+      sendBatchedNotificationEmail("ideaExpanded", idea.title, user.$id);
+      return expansionText;
     } catch (err) {
       console.error("AI expansion error:", err);
-      const message = err?.message || "Failed to expand idea. Please try again.";
-      toast.error(message);
+      toast.error("Failed to expand idea with AI.");
       throw err;
     }
   }
@@ -629,34 +659,66 @@ export function IdeasProvider({ children }) {
       return;
     }
 
-    if (checkDailyPitchLimit(ideas, user.$id)) {
-      toast.error("Daily limit reached! You can generate 3 pitches per day.");
+    if (!IDEA_PITCH_FUNCTION_ID) {
+      toast.error("AI pitch generation is not configured. Missing function ID.");
+      return;
+    }
+
+    const hasReachedLimit = checkDailyPitchLimit(ideas, user.$id);
+    if (hasReachedLimit) {
+      toast.error("Daily AI pitch limit reached (3 per day).");
       return;
     }
 
     try {
-      const result = await generatePitch(
-        idea.title,
-        idea.description,
-        "investors",
-        "refine this idea into a clear pitch deck"
+      const payload = {
+        mode: "pitch",
+        ideaId: idea.$id,
+        title: idea.title,
+        description: idea.description,
+        category: idea.category,
+        priority: idea.priority,
+        tags: idea.tags,
+        userId: user.$id,
+      };
+
+      const execution = await functions.createExecution(
+        IDEA_PITCH_FUNCTION_ID,
+        JSON.stringify(payload),
+        false
       );
 
-      if (result.success) {
-        const pitchGeneratedAt = new Date().toISOString();
-
-        await update(idea.$id, {
-          aiPitch: result.pitch,
-          pitchGeneratedAt,
-        });
-
-        return result.pitch;
-      } else {
-        throw new Error(result.error);
+      let pitchText = "";
+      try {
+        const parsed = JSON.parse(execution.responseBody || "{}");
+        pitchText = parsed.pitch || parsed.content || parsed.text || "";
+      } catch {
+        pitchText = execution.responseBody || "";
       }
+
+      if (!pitchText) {
+        toast.error("AI pitch generation failed. Empty response from function.");
+        return;
+      }
+
+      const updated = await databases.updateDocument(
+        IDEAS_DATABASE_ID,
+        IDEAS_COLLECTION_ID,
+        idea.$id,
+        {
+          aiPitch: pitchText,
+          pitchGeneratedAt: new Date().toISOString(),
+        }
+      );
+
+      setIdeas((prev) =>
+        prev.map((i) => (i.$id === idea.$id ? updated : i))
+      );
+
+      return pitchText;
     } catch (err) {
       console.error("AI pitch error:", err);
-      toast.error("Failed to generate pitch. Please try again.");
+      toast.error("Failed to generate pitch with AI.");
       throw err;
     }
   }

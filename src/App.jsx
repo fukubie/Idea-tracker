@@ -113,10 +113,6 @@ function AppContent() {
       );
     }
 
-    if (userContext.current && !userContext.isUserVerified()) {
-      return <VerificationPage />;
-    }
-
     return (
       <IdeasProvider>
         <MessagesProvider>

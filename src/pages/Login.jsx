@@ -20,7 +20,12 @@ export function Login({ navigate }) {
     return "";
   };
 
-  const validatePassword = (password) => {
+  const validatePasswordForLogin = (password) => {
+    if (!password) return "Password is required";
+    return "";
+  };
+
+  const validatePasswordForRegister = (password) => {
     if (!password) return "Password is required";
     if (password.length < 8)
       return "Password must be at least 8 characters long";
@@ -40,7 +45,7 @@ export function Login({ navigate }) {
   const handleLogin = async (e) => {
     e.preventDefault();
     const emailErr = validateEmail(email);
-    const passwordErr = validatePassword(password);
+    const passwordErr = validatePasswordForLogin(password);
 
     setEmailError(emailErr);
     setPasswordError(passwordErr);
@@ -66,7 +71,7 @@ export function Login({ navigate }) {
   const handleRegister = async (e) => {
     e.preventDefault();
     const emailErr = validateEmail(email);
-    const passwordErr = validatePassword(password);
+    const passwordErr = validatePasswordForRegister(password);
 
     setEmailError(emailErr);
     setPasswordError(passwordErr);
@@ -106,7 +111,8 @@ export function Login({ navigate }) {
     const value = e.target.value;
     setPassword(value);
     if (passwordError && value) {
-      setPasswordError(validatePassword(value));
+      // During typing, keep validation lightweight to avoid blocking known weak existing passwords.
+      setPasswordError("");
     }
   };
 
@@ -180,7 +186,13 @@ export function Login({ navigate }) {
                   placeholder="Minimum 8 characters"
                   value={password}
                   onChange={handlePasswordChange}
-                  onBlur={() => setPasswordError(validatePassword(password))}
+                  onBlur={() =>
+                    setPasswordError(
+                      document.activeElement?.form?.id === "register-form"
+                        ? validatePasswordForRegister(password)
+                        : validatePasswordForLogin(password)
+                    )
+                  }
                   autoComplete="off"
                   className={`w-full bg-transparent border rounded-lg pl-10 pr-12 py-2 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#FF6500] focus:border-transparent transition-all ${
                     passwordError

@@ -1,8 +1,0 @@
-{
-  "name": "idea-expand-fn",
-  "version": "1.0.0",
-  "description": "Appwrite function for Idea Tracker AI expansion using Gemini",
-  "main": "index.js",
-  "type": "module"
-}
-
