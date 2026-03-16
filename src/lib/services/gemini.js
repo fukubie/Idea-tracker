@@ -24,9 +24,12 @@ async function callAppwriteFunction(functionId, payload) {
   );
 
   if (response.status !== "completed") {
-    console.error("AI function execution failed:", response);
+    const detail =
+      [response.errors, response.responseBody].filter(Boolean).join(" ") ||
+      response.status;
+    console.error("AI function execution failed:", response.status, response.errors, response.responseBody);
     throw new Error(
-      `AI function execution failed with status: ${response.status}`
+      `AI function execution failed: ${detail}`
     );
   }
 

@@ -2,7 +2,7 @@
  * Appwrite Function: AI idea expansion (Gemini).
  * For Git: Root directory = appwrite-functions, Entrypoint = src/main.js
  */
-export default async ({ req, res }) => {
+export default async ({ req = {}, res } = {}) => {
   try {
     let body = {};
     try {
@@ -14,7 +14,7 @@ export default async ({ req, res }) => {
         body = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
       }
     } catch (parseErr) {
-      return res.json(
+      return res?.json?.(
         { success: false, error: "Invalid request body: " + parseErr.message },
         400
       );
@@ -23,7 +23,7 @@ export default async ({ req, res }) => {
     const { title, description, category, priority } = body;
 
     if (!title || !description) {
-      return res.json(
+      return res?.json?.(
         { success: false, error: "Missing title or description" },
         400
       );
@@ -31,7 +31,7 @@ export default async ({ req, res }) => {
 
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
-      return res.json(
+      return res?.json?.(
         { success: false, error: "GEMINI_API_KEY not set" },
         500
       );
@@ -62,7 +62,7 @@ Respond in markdown.`;
 
     if (!response.ok) {
       const err = await response.text();
-      return res.json(
+      return res?.json?.(
         { success: false, error: err || response.statusText },
         500
       );
@@ -73,14 +73,14 @@ Respond in markdown.`;
       data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || "";
 
     if (!text) {
-      return res.json(
+      return res?.json?.(
         { success: false, error: "Gemini returned no text" },
         500
       );
     }
 
-    return res.json({ success: true, expansion: text });
+    return res?.json?.({ success: true, expansion: text });
   } catch (e) {
-    return res.json({ success: false, error: e.message }, 500);
+    return res?.json?.({ success: false, error: e.message }, 500);
   }
 };
